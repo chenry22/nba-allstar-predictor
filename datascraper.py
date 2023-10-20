@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import numpy as np
 import time
 import os.path
 
@@ -89,13 +88,13 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
         html = requests.get(newURL)
         soup = BeautifulSoup(html.content, "html.parser")
 
-        print(newURL)
         meta = soup.find('div', id="info")
         meta = meta.find('div', id="meta")
         name = meta.find('h1')
-        name = name.find('span').string
+        name = name.find('span').string.encode('utf-8')
+        print(name)
 
-        player_data += [str(name)]
+        player_data += [name]
         player_data += [str(player_yrs[i])]
 
         content = soup.find('div', id="content")        
@@ -115,18 +114,47 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
         print(str(i + 1) + " / " + str(len(link_players)) + " player stats compiled...")
         time.sleep(3)
 
-    cols = ["Name", "All-Star Year", "Age", "Team", "League", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
+    cols = ["Name", "All-Star Year", "Age", "Team", "League", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
 
     df = pd.DataFrame(final_player_data)
     df.columns = cols
     df.to_csv(outfile)
     print("Finished Data Compilation. Storing in " + outfile)
 
-checkfile = "out.csv"
 
-if os.path.isfile(checkfile):
-    print("Data file found! Reading to dataframe.")
+def get_prev_appearances(x):
+    if counts[x] > 0:
+        counts[x] -= 1
+        return counts[x] + 1
+    else:
+        return 0
+
+if not os.path.isfile("outplus.csv"):
+    print("Extended data file NOT found. Creating manually using original data")
+    checkfile = "out.csv"
+
+    if os.path.isfile(checkfile):
+        print("Data file found! Reading to dataframe.")
+    else:
+        print("Data file not found. Creating manually using datascraper.")
+        print("(This could take a while due to website restrictions...)")
+        get_all_star_data(years_back=20)
+
+    df = pd.read_csv(checkfile)
+    if not 'Previous Times All-Star' in df.columns:
+        # for each year, check if previous all star
+        counts = df["Name"].value_counts()
+        counts = counts - 1
+
+        df['Previous Times All-Star'] = df["Name"].apply(get_prev_appearances)
+
+    if not 'First Appearance' in df.columns:
+        df['First Appearance'] = df['Previous Times All-Star'].apply(lambda x : x == 0)
+
+    if not os.path.isfile("outplus.csv"):
+        df.to_csv("outplus.csv")
+
 else:
-    print("Data file not found. Creating manually using datascraper.")
-    print("(This could take a while due to website restrictions...)")
-    get_all_star_data()
+    print("Extended data file found.")
+
+df = pd.read_csv("outplus.csv")
