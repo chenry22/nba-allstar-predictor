@@ -5,13 +5,32 @@ function submitData() {
 
     for (var[key, value] of data){
         if(value < 0){
+            document.querySelector("[name='" + key + "']").value = 0;
             alert("Negative values are not valid.");
             return false;
         }
 
-        if((key == "gplayed" || key == "gstarted") && value > 82){
+        if((key == "gplayed") && value > 82){
+            document.querySelector("[name='" + key + "']").value = 82;
             alert("Maximum games is 82")
             return false;
+        }
+
+        if(key == "gstarted"){
+            if(value > 82){
+                document.querySelector("[name='" + key + "']").value = 82;
+                alert("Maximum games is 82")
+                return false;
+            } else if (value > inputArray[0]){
+                document.querySelector("[name='" + key + "']").value = inputArray[0];
+                alert("Cannot have more GS than GP.");
+                return false;
+            }
+        }
+
+        if(key == "allstarnum"){
+            value = Math.round(value)
+            document.querySelector("[name='" + key + "']").value = value;
         }
 
         if (!value){
@@ -21,12 +40,14 @@ function submitData() {
         }
 
         if((key == "fgapg") && (inputArray[3] > inputArray[4])){
+            document.querySelector("[name='" + key + "']").value = inputArray[3];
             alert("Cannot have more FG than FGA.");
             return false;
         }
 
         if(key == "3papg"){
             if(inputArray[5] > inputArray[6]){
+                document.querySelector("[name='" + key + "']").value = inputArray[5];
                 alert("Cannot have more 3P than 3PA");
                 return false;
             }
@@ -46,7 +67,8 @@ function submitData() {
             }
         }
 
-        if((key == "ftapg" )&& (inputArray[9] > inputArray[10])){
+        if((key == "ftapg" ) && (inputArray[9] > inputArray[10])){
+            document.querySelector("[name='" + key + "']").value = inputArray[9];
             alert("FT cannot be greater than FTA");
             return false;
         }
@@ -62,6 +84,7 @@ function submitData() {
 
         if(key == "winpct"){
             if(value > 1){
+                document.querySelector("[name='" + key + "']").value = 1.0;
                 alert("Win % cannot be greater than 1.0");
                 return false;
             }
@@ -80,11 +103,33 @@ function submitData() {
 
     var row1 = document.getElementById("show_vals_1").getElementsByTagName('td');
     var row2 = document.getElementById("show_vals_2").getElementsByTagName('td');
+    var row3 = document.getElementById("show_vals_3").getElementsByTagName('td');
+    var row4 = document.getElementById("show_vals_4").getElementsByTagName('td');
 
-    for(var i = 0; i < row1.length; i++){
-        row1[i].innerHTML = inputArray[i];
-        row2[i].innerHTML = inputArray[i + row1.length];
+    for(var i = 0; i < Math.max(row1.length, row2.length, row3.length, row4.length); i++){
+        if(i < row1.length){
+            row1[i].innerHTML = inputArray[i];
+        }
+        if(i < row2.length){
+            row2[i].innerHTML = inputArray[i + row1.length];
+        }
+        if(i < row3.length){
+            row3[i].innerHTML = inputArray[i + row1.length + row2.length];
+        }
+        if(i < row4.length){
+            row4[i].innerHTML = inputArray[i + row1.length + row2.length + row3.length];
+        }
     }
+
+    // var pyrequest = $.ajax({
+    //     type: "GET",
+    //     dataType: "json",
+    //     url: "~/predictor.py",
+    //     async: false,
+    //     data: {param: data}
+    // });
+
+    // console.log(pyrequest.responseText);
 
     return false;
 }

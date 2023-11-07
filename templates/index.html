@@ -7,112 +7,202 @@
     <title>NBA All-Star Predictor</title>
   </head>
   <body>
-    <h1>NBA All-Star Predictor</h1>
+    <h1 class="title"><u>NBA All-Star Predictor</u></h1>
     <br>
     <p class="center">This is an NBA All-Star predictor powered by a logistic regression model</p>
     <p class="center">This model was trained off of the past decade plus of all-stars and has an average accuracy of about 95%</p>
     <br>
     <div>
-      <p>Enter values to get a prediction!</p>
-      <p id="input_err"></p>
-      <form class="center" id="inputform" onsubmit="return false;">
-        <label for="gplayed">Games Played: </label>
-        <input type="number" name="gplayed" min="0" max="82" step="1"><br>
-        <label for="gstarted">Games Started: </label>
-        <input type="number" name="gstarted" min="0" max="82" step="1"><br>
-        <label for="mpg">Minutes per Game: </label>
-        <input type="number" name="mpg" min="0" step="0.01"><br>
-        <label for="fgpg">Field Goals PG: </label>
-        <input type="number" name="fgpg" min="0" step="0.01"><br>
-        <label for="fgapg">Field Goals Attempted per Game: </label>
-        <input type="number" name="fgapg" min="0" step="0.01"><br>
-        <label for="3ppg">3-Pointers per Game: </label>
-        <input type="number" name="3ppg" min="0" step="0.01"><br>
-        <label for="3papg">3-Pointers Attempted per Game: </label>
-        <input type="number" name="3papg" min="0" step="0.01"><br>
-        <label for="ftpg">Free Throws per Game: </label>
-        <input type="number" name="ftpg" min="0" step="0.01"><br>
-        <label for="ftapg">Free Throws Attempted per Game: </label>
-        <input type="number" name="ftapg" min="0" step="0.01"><br>
-        <label for="orbpg">Offensive Rebounds per Game:</label>
-        <input type="number" name="orbpg" min="0" step="0.01"><br>
-        <label for="drpg">Defensive Rebounds per Game: </label>
-        <input type="number" name="drpg" min="0" step="0.01"><br>
-        <label for="apg">Assists per Game:</label>
-        <input type="number" name="apg" min="0" step="0.01"><br>
-        <label for="spg">Steals per Game:</label>
-        <input type="number" name="spg" min="0" step="0.01"><br>
-        <label for="bpg">Blocks per Game:</label>
-        <input type="number" name="bpg" min="0" step="0.01"><br>
-        <label for="tovpg">Turnovers per Game:</label>
-        <input type="number" name="tovpg" min="0" step="0.01"><br>
-        <label for="allstarnum">Previous All-Star Appearances:</label>
-        <input type="number" name="allstarnum" min="0" step="1"><br>
-        <label for="winpct">Team Win Percentage:</label>
-        <input type="number" name="winpct" min="0" max="1" step="0.01"><br>
-      </form>
+      <p class="center">Enter values to get a prediction!</p>
+      <p id="input_err"></p><br>
+      <div id="form_div">
+        <form class="center" id="inputform" onsubmit="return false;">
+          <table id="input_table">
+            <tr>
+              <td>
+                <label for="gplayed">Games Played:</label>
+                <input type="number" name="gplayed" min="0" max="82" step="1">
+              </td>
+
+              <td>
+                <label for="gstarted">Games Started:</label>
+                <input type="number" name="gstarted" min="0" max="82" step="1">
+              </td>
+
+              <td>
+                <label for="mpg">Minutes per Game:</label>
+                <input type="number" name="mpg" min="0" step="0.01">
+              </td>
+            </tr>
+          </table>
+
+          <table id="input_table">
+            <tr>
+              <td>
+                <label for="fgpg">Field Goals per Game:</label>
+                <input type="number" name="fgpg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="fgapg">Field Goals Attempted per Game:</label>
+                <input type="number" name="fgapg" min="0" step="0.01">
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <label for="3ppg">3-Pointers per Game:</label>
+                <input type="number" name="3ppg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="3papg">3-Pointers Attempted per Game:</label>
+                <input type="number" name="3papg" min="0" step="0.01">
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <label for="ftpg">Free Throws per Game:</label>
+                <input type="number" name="ftpg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="ftapg">Free Throws Attempted per Game:   </label>
+                <input type="number" name="ftapg" min="0" step="0.01">
+              </td>
+            </tr>
+          </table>
+
+          <table id="input_table">
+            <tr>
+              <td>
+                <label for="orbpg">Offensive Rebounds per Game:   </label>
+                <input type="number" name="orbpg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="drpg">Defensive Rebounds per Game:   </label>
+                <input type="number" name="drpg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="apg">Assists per Game:   </label>
+                <input type="number" name="apg" min="0" step="0.01">
+              </td>
+            </tr>
+          </table>
+
+          <table id="input_table">
+            <tr>
+              <td>
+                <label for="spg">Steals per Game:    </label>
+                <input type="number" name="spg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="bpg">Blocks per Game:   </label>
+                <input type="number" name="bpg" min="0" step="0.01">
+              </td>
+
+              <td>
+                <label for="tovpg">Turnovers per Game:   </label>
+                <input type="number" name="tovpg" min="0" step="0.01">
+              </td>
+            </tr>
+          </table>
+
+          <table id="input_table">
+            <tr>
+              <td>
+                <label for="allstarnum">Previous All-Star Appearances:   </label>
+                <input type="number" name="allstarnum" min="0" step="1">
+              </td>
+
+              <td>
+                <label for="winpct">Team Win Percentage:   </label>
+                <input type="number" name="winpct" min="0" max="1" step="0.01">
+              </td>
+            </tr> 
+          </table>
+        </form>
+      </div>
       <div id="button-center">
         <button onclick="submitData()">Submit</button>
       </div>
     </div>
 
     <br>
-    <table id="show_vals_1">
-      <tr>
-        <th>GP</th>
-        <th>GS</th>
-        <th>MPG</th>
-        <th>FG</th>
-        <th>FGA</th>
-        <th>3P</th>
-        <th>3PA</th>
-        <th>2P</th>
-        <th>2PA</th>
-        <th>FT</th>
-        <th>FTA</th>
-      </tr>
-      <tr>
-        <td id="tgp">None</td>
-        <td id="tgs">None</td>
-        <td id="tmpg">None</td>
-        <td id="tfgpg">None</td>
-        <td id="tfgapg">None</td>
-        <td id="t3ppg">None</td>
-        <td id="t3papg">None</td>
-        <td id="t2ppg">None</td>
-        <td id="t2papg">None</td>
-        <td id="tftpg">None</td>
-        <td id="tftapg">None</td>
-      </tr>
-    </table><br>
-    <table id="show_vals_2">
-      <tr>
-        <th>ORB</th>
-        <th>DRB</th>
-        <th>TRB</th>
-        <th>AST</th>
-        <th>STL</th>
-        <th>BLK</th>
-        <th>PTS</th>
-        <th>TOV</th>
-        <th>Previous All-Star</th>
-        <th>Win %</th>
-        <th>PTS/FGA</th>
-      </tr>
-      <tr>
-        <td id="torbpg">None</td>
-        <td id="tdrbpg">None</td>
-        <td id="ttrbpg">None</td>
-        <td id="tapg">None</td>
-        <td id="tspg">None</td>
-        <td id="tbpg">None</td>
-        <td id="tppg">None</td>
-        <td id="ttovpg">None</td>
-        <td id="tprevallstar">None</td>
-        <td id="twinpct">None</td>
-        <td id="tpts_fga">None</td>
-      </tr>
-    </table><br>
+    <div id="table_div">
+      <table class="center" id="show_vals_1">
+        <tr>
+          <th>GP</th>
+          <th>GS</th>
+          <th>MPG</th>
+          <th>FG</th>
+          <th>FGA</th>
+        </tr>
+        <tr>
+          <td id="tgp">None</td>
+          <td id="tgs">None</td>
+          <td id="tmpg">None</td>
+          <td id="tfgpg">None</td>
+          <td id="tfgapg">None</td>
+        </tr>
+      </table><br>
+      <table class="center" id="show_vals_2">
+        <tr>
+          <th>3P</th>
+          <th>3PA</th>
+          <th>2P</th>
+          <th>2PA</th>
+          <th>FT</th>
+          <th>FTA</th>
+        </tr>
+        <tr>
+          <td id="t3ppg">None</td>
+          <td id="t3papg">None</td>
+          <td id="t2ppg">None</td>
+          <td id="t2papg">None</td>
+          <td id="tftpg">None</td>
+          <td id="tftapg">None</td>
+        </tr>
+      </table><br>
+      <table class="center" id="show_vals_3">
+        <tr>
+          <th>ORB</th>
+          <th>DRB</th>
+          <th>TRB</th>
+          <th>AST</th>
+          <th>STL</th>
+          <th>BLK</th>
+        </tr>
+        <tr>
+          <td id="torbpg">None</td>
+          <td id="tdrbpg">None</td>
+          <td id="ttrbpg">None</td>
+          <td id="tapg">None</td>
+          <td id="tspg">None</td>
+          <td id="tbpg">None</td>
+        </tr>
+      </table><br>
+      <table class="center" id="show_vals_4">
+        <tr>
+          <th>PTS</th>
+          <th>TOV</th>
+          <th>Previous All-Star</th>
+          <th>Win %</th>
+          <th>PTS/FGA</th>
+        </tr>
+        <tr>
+          <td id="tppg">None</td>
+          <td id="ttovpg">None</td>
+          <td id="tprevallstar">None</td>
+          <td id="twinpct">None</td>
+          <td id="tpts_fga">None</td>
+        </tr>
+      </table>
+    </div><br>
     <p id="return_pct"></p>
     <p id="return_dec"></p>
   </body>

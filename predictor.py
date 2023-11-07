@@ -22,3 +22,7 @@ in_df.columns = features
 
 print(log_model.predict_proba(in_df)[0])
 print(log_model.predict(in_df))
+
+def index(req):
+        postData = req.form
+        return postData;
