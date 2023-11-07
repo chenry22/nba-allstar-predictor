@@ -1,0 +1,13 @@
+.center {
+    text-align: center;
+}
+
+#inputform {
+    line-height: 20px;
+}
+
+#button-center {
+    text-align: center;
+    margin-left: 50%;
+    display: flex;
+}
