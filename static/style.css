@@ -1,10 +1,45 @@
-p {
+html {
+    background: rgba(255, 99, 71, 0.5);
+}
+
+#table_div table {
+    background-color: rgb(236, 236, 251);
+}
+
+#returns {
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1%;
+    
+    background-color: rgb(255, 135, 135);
+}
+
+#returns h3 {
+    margin-right: 5%;
+}
+
+#returns p {
     font-size: 20;
+}
+
+p.descript {
+    text-align: center;
+    font-size-adjust: 0.6;
+
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 h1.title {
     margin-top: 5%;
     text-align: center;
+
+    font-size-adjust: 0.8;
 }
 
 .center {
@@ -20,6 +55,8 @@ h1.title {
     border: 1px solid black;
     margin-left: auto;
     margin-right: auto;
+
+    font-size-adjust: 0.5;
 }
 
 #inputform label {
@@ -29,6 +66,8 @@ h1.title {
 
 #table_div th {
     padding: 10px;
+    width: 100px;
+
     background-color: rgb(68, 70, 80);
     color: white;
 }
@@ -75,8 +114,6 @@ input {
     text-align: left;
 
     padding: 1%;
-    padding-top: 2%;
-    padding-bottom: 2%;
 
     margin-left: 2%;
     margin-right: 2%;
