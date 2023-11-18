@@ -26,10 +26,11 @@ def getPrediction(arr_in):
     in_df.columns = features
 
     prob = log_model.predict_proba(in_df)[0];
-    predict = log_model.predict(in_df);
+    # predict = log_model.predict(in_df);
     str_out = "";
+    thrs = 0.75
 
-    if bool(predict):
+    if prob[1] > thrs:
         str_out = "All-Star."
     else:
         str_out = "Not All-Star."

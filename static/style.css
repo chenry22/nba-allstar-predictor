@@ -150,3 +150,7 @@ input {
 #inputform {
     background-color: rgb(182, 195, 219);
 }
+
+#bottom {
+ margin: 100px;   
+}
