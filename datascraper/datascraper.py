@@ -1,5 +1,4 @@
 # HELPER LIB.S
-
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -12,8 +11,9 @@ from sklearn.linear_model import LogisticRegression
 
 import pickle
 
-# CONST.S
 
+
+# CONST.S
 curr_year = 2023
 baseURL = "https://www.basketball-reference.com/"
 
@@ -34,8 +34,9 @@ team_pct_dict = {}
 
 dict = {}
 
-# HELPER FUNCTIONS 
 
+
+# HELPER FUNCTIONS 
 def get_all_star_data(years_back=11, outfile="out.csv"):
     URL = "https://www.basketball-reference.com/allstar/"
 
@@ -354,8 +355,10 @@ def match_win_pct(df):
 
     return ret
 
-# MAIN CODE
 
+
+# MAIN CODE
+# Checking all necessary files are present
 print("Checking all-star datapath")
 if not os.path.isfile("allstarplus.csv"):
     print("     All-star data file NOT found. Creating manually using original data")
@@ -410,6 +413,8 @@ if not os.path.isfile("teamdata.csv"):
 else:
     print("     Team data found.")
 
+
+
 # now real data stuff.
 # First we need to make sure each player has an associated win percent
 df = pd.read_csv("teamdata.csv")
@@ -446,10 +451,6 @@ df = df.drop(columns=["Year", "Name"], axis=1)
 
 corrs = zip(df.columns, np.array(df.corr().round(3)["Is All-Star"]))
 
-# print("ALL STAR CORRELATIONS VS STATS")
-# for corr in corrs:
-#     print(corr)
-
 # from these correlations we can get our list of relevant features
 features = ['Games Played', 'Games Started', 'MPG', 'FG', 'FGA',
             '3P', '3PA', '2P', '2PA', 'FT',
@@ -469,3 +470,5 @@ log_model.fit(X_train, y_train)
 
 filename = 'allstar_model.sav'
 pickle.dump(log_model, open(filename, 'wb'))
+
+# Now we have our saved model!

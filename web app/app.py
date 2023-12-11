@@ -7,10 +7,13 @@ from sklearn.linear_model import LogisticRegression
 from flask import Flask, render_template, request
 import os
 
+import dailyscraper.dailyscrape as daily
+
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 model_save = os.path.join(basedir, 'static/allstar_model.sav')
+daily_stats = os.path.join(basedir, 'dailyscraper/current_stats.csv')
 
 def getPrediction(arr_in): 
     log_model = pickle.load(open(model_save, 'rb'))
@@ -45,6 +48,7 @@ def getPrediction(arr_in):
 
 @app.route('/')
 def main():
+    daily()
     return render_template('index.html')
 
 @app.route('/process', methods=['POST']) 
@@ -52,6 +56,8 @@ def process():
     data = request.get_json()
     prediction = getPrediction(data)
     return prediction;
+
+
 
 if __name__ == "__main__":
     app.run()
