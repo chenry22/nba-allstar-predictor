@@ -51,6 +51,29 @@ def winPercent(x, df):
 
     return 0
 
+def gamesStats(x, df, played):
+    team = x["Team"]
+
+    if not isinstance(team, str):
+        team = team.decode('utf-8')
+
+    games = df[df["Team"] == team]["Games"]
+
+    if played:
+        series = (82 - games) + int(x["Games Played"])
+        if len(series) > 0:
+            return series.iloc[0]
+        else:
+            print(x)
+            return 0
+    else:
+        series = (82 - games) + int(x["Games Started"])
+        if len(series) > 0:
+            return series.iloc[0]
+        else:
+            print(x)
+            return 0
+
 def updateLeaderboard(df, outfile='curr_player.csv'):
     # No null values
     df = df.reset_index(drop=True)
@@ -138,7 +161,7 @@ def datascrape(outfile='curr_player.csv'):
                     break
 
             # Set team var to last team of season
-            player[4] = new_team.encode('utf-8')
+            player[4] = new_team
             
         # Accounting for table breaks counting as headers (only happen
         # every 20 players though)
@@ -176,11 +199,8 @@ def datascrape(outfile='curr_player.csv'):
     df2 = pd.DataFrame(teamdata).drop_duplicates()
     cols = ["Team", "Wins", "Losses", "Percent", "Games Back", "PPG", "OPPG", "SRS"]
     df2.columns = cols
-
-    most_games = np.max((np.array(df2["Wins"]).astype('int') + np.array(df2["Losses"]).astype('int')).reshape(-1, 1))
-    print(most_games)
-    
     df2["Team"] = df2["Team"].apply(lambda x: teams[int(teams_full.index(x))])
+    df2["Games"] = np.array(df2["Wins"]).astype('int') + np.array(df2["Losses"]).astype('int')
 
     path = os.path.dirname(os.path.realpath(__name__))
     allstar = pd.read_csv(os.path.join(path, 'allstarplus.csv'))
@@ -190,9 +210,9 @@ def datascrape(outfile='curr_player.csv'):
     df['Previous Times All-Star'] = df["Name"].apply(lambda x : counts[x] if x in counts else 0)
     df["Win Percent"] = df["Team"].apply(lambda x : winPercent(x, df2))
     df['PTS/FGA'] = df.apply(ptsPerFGA, axis=1)
-    df["Games Played"] = np.array(df["Games Played"]).astype('int') + (82 - most_games)
-    df["Games Started"] = np.array(df["Games Started"]).astype('int') + (82 - most_games)
-
+    df["Games Played"] = df.apply(lambda x : gamesStats(x, df2, True), axis=1)
+    df["Games Started"] = df.apply(lambda x : gamesStats(x, df2, False), axis=1)
+                                   
     print("Finished player data compilation. Now updating leaderboard")
 
     # create leaderboard as well
