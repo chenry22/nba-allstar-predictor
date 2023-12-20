@@ -187,12 +187,12 @@ def get_player_data(start_year=2010, outfile="playerdata.csv"):
             player += [str(year)]
             for d in all_data:
                 if d.find('a'):
-                    player += [str(d.find('a').string.encode('utf-8'))]
+                    player += [str(d.find('a').string)]
                 else:
                     if d.string:
-                        player += [str(d.string.encode('utf-8'))]
+                        player += [str(d.string)]
                     else:
-                        player += []
+                        player += ["0"]
 
             if player[4] == "TOT":
                 # get table head value
@@ -208,7 +208,7 @@ def get_player_data(start_year=2010, outfile="playerdata.csv"):
                         break
 
                 # Set team var to last team of season
-                player[4] = new_team.encode('utf-8')
+                player[4] = new_team
             
             # Accounting for table breaks counting as headers (only happen
             # every 20 players though)
@@ -434,6 +434,7 @@ df["Win Percent"] = match_win_pct(df)
 
 # clean up dataframe
 df.drop(columns=df.columns[0], axis=1, inplace=True)
+
 # clean up null vals (few in terms of overall dataset size, so we're chilling)
 df = df.dropna()
 
@@ -469,6 +470,6 @@ log_model = LogisticRegression(solver='liblinear')
 log_model.fit(X_train, y_train)
 
 filename = 'allstar_model.sav'
-pickle.dump(log_model, open(filename, 'wb'))
+# pickle.dump(log_model, open(filename, 'wb'))
 
 # Now we have our saved model!

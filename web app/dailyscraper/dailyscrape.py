@@ -36,9 +36,10 @@ def ptsPerFGA(x):
     fga = x['FGA']
     pts = x['PTS']
 
+    if(float(fga) == 0):
+        return 0
+
     try:
-        float(fga)
-        float(pts)
         return float(pts) / float(fga)
     except TypeError:
         return 0
@@ -150,7 +151,7 @@ def datascrape(outfile='curr_player.csv'):
                 if d.string:
                     player += [str(d.string)]
                 else:
-                    player += []
+                    player += ["0"]
 
         if player[4] == "TOT":
             # get table head value
