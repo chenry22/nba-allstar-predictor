@@ -95,8 +95,9 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     full["% All Star"] = predictions
     full = full.sort_values(by=['% All Star'], ascending=False)
 
-    path = os.path.dirname(os.path.realpath(__name__))
-    full.to_csv(os.path.join(path, outfile))
+    path = os.path.dirname(os.path.dirname(os.path.realpath(__name__)))
+    path = os.path.join(path, "static/data/")
+    full.reset_index(drop=True).to_csv(os.path.join(path, outfile))
 
     df_east = df[df["Team"].isin(east)]
     df_west = df[df["Team"].isin(west)]
@@ -104,11 +105,15 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     df_east = df_east.sort_values(by=['% All Star'], ascending=False).iloc[:20]
     df_west = df_west.sort_values(by=['% All Star'], ascending=False).iloc[:20]
 
-    df_east.to_csv(os.path.join(path, 'east_leaders.csv'))
-    df_west.to_csv(os.path.join(path, 'west_leaders.csv'))
+    df_east.reset_index(drop=True).to_csv(os.path.join(path, 'east_leaders.csv'))
+    df_west.reset_index(drop=True).to_csv(os.path.join(path, 'west_leaders.csv'))
 
     print("Updated leaderboard.")
     print("Current time is " + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
+
+    # Keep track of last updates to show on website
+    with open(os.path.join(path, "updatelog.txt"), 'w') as f:
+        f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
 
     return
 

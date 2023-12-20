@@ -2,16 +2,14 @@ import pickle
 import pandas as pd
 import numpy as np
 
-from sklearn.linear_model import LogisticRegression
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import os
 
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-model_save = os.path.join(basedir, 'web app/static/allstar_model.sav')
-daily_stats = os.path.join(basedir, 'web app/dailyscraper/current_stats.csv')
+model_save = os.path.join(basedir, 'static/allstar_model.sav')
+daily_stats = os.path.join(basedir, 'dailyscraper/current_stats.csv')
 
 def getPrediction(arr_in): 
     log_model = pickle.load(open(model_save, 'rb'))
@@ -46,13 +44,20 @@ def getPrediction(arr_in):
 
 @app.route('/')
 def main():
-    return render_template('index.html')
+    f = open(os.path.join(basedir, "static/data/updatelog.txt"), 'r')
+    timelog = f.readline().replace(" ", " at ")
+    return render_template('index.html', timelog=timelog)
 
 @app.route('/process', methods=['POST']) 
 def process(): 
     data = request.get_json()
     prediction = getPrediction(data)
     return prediction;
+
+@app.route('/static/data/<filename>')
+def get_file(filename):
+    print("Requesting data " + filename)
+    return send_from_directory('static/data/', filename)
 
 
 
