@@ -8,6 +8,8 @@ body {
     background-color: rgb(227, 145, 139);
 }
 
+
+
 /* Add a black background color to the top navigation */
 .topnav {
     background-color: rgb(41, 62, 62);
@@ -57,10 +59,14 @@ body {
     color: white;
   }
 
+
+
 /* Set background of table */
 #table_div table {
     background-color: rgb(236, 236, 251);
 }
+
+
 
 /* Format return segment */
 #returns {
@@ -84,6 +90,29 @@ body {
     font-size: 20;
 }
 
+#returns-bg {
+    display: flex;
+    justify-content: center;
+
+    text-align: center;
+
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 1%;
+    
+    background-color: rgb(133, 145, 255);
+}
+
+#returns-bg h3 {
+    margin-right: 5%;
+}
+
+#returns-bg p {
+    font-size: 20;
+}
+
+
+
 p.descript {
     text-align: center;
     font-size-adjust: 0.6;
@@ -102,6 +131,8 @@ h1.title {
 .center {
     text-align: center;
 }
+
+
 
 #table_div {
     margin: 0 auto;
@@ -139,6 +170,8 @@ h1.title {
     font-weight: bold;
 }
 
+
+
 #button-center {
     display: flex;
     justify-content: center;
@@ -148,6 +181,8 @@ h1.title {
     font-size: 20;
     padding: 2%;
 }
+
+
 
 label {
     width: 100px;
@@ -200,9 +235,13 @@ input {
     background-color: rgb(162, 180, 213);
 }
 
+
+
 #bottom {
  padding: 50px;   
 }
+
+
 
 .search-container {
     position: relative;
@@ -248,4 +287,112 @@ input {
 
 .dropdown-item:hover {
     background-color: rgb(202, 239, 249, 50);
+}
+
+
+
+#leaderboard table {
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: wheat;
+}
+
+#leaderboard td {
+    text-align: center;
+}
+
+#table-head {
+    background-color: black;
+    color: white;
+}
+
+#leaderboard th {
+    padding: 10px 15px;
+}
+
+#leaderboard td {
+    padding: 5px 10px;
+}
+
+.player-east:hover {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+.player-west:hover {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+.table-title {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+
+
+/* Leaderboard table fixer for less wide screens */
+@media 
+only screen and (max-width: 850px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	/* Force table to not be like tables anymore */
+	#leaderboard table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	#leaderboard tr th { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	#leaderboard tr { border: 1px solid #ccc; }
+	
+	#leaderboard td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	#leaderboard td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+	}
+	
+	/*
+	Label the data
+	*/
+	#leaderboard td:nth-of-type(1):before { content: "Rank"; }
+	#leaderboard td:nth-of-type(2):before { content: "Name"; }
+	#leaderboard td:nth-of-type(3):before { content: "% All-Star"; }
+	#leaderboard td:nth-of-type(4):before { content: "Position"; }
+	#leaderboard td:nth-of-type(5):before { content: "Age"; }
+	#leaderboard td:nth-of-type(6):before { content: "Previous All-Star"; }
+	#leaderboard td:nth-of-type(7):before { content: "Team"; }
+	#leaderboard td:nth-of-type(8):before { content: "Team Win %"; }
+	#leaderboard td:nth-of-type(9):before { content: "Games Played"; }
+	#leaderboard td:nth-of-type(10):before { content: "Games Started"; }
+    #leaderboard td:nth-of-type(11):before { content: "Points"; }
+    #leaderboard td:nth-of-type(12):before { content: "Field Goal %"; }
+    #leaderboard td:nth-of-type(13):before { content: "3-Point %"; }
+    #leaderboard td:nth-of-type(14):before { content: "Free Throw %"; }
+    #leaderboard td:nth-of-type(15):before { content: "Rebounds"; }
+    #leaderboard td:nth-of-type(16):before { content: "Assists"; }
+    #leaderboard td:nth-of-type(17):before { content: "Steals"; }
+    #leaderboard td:nth-of-type(18):before { content: "Blocks"; }
+    #leaderboard td:nth-of-type(19):before { content: "Turnovers"; }
+    #leaderboard td:nth-of-type(20):before { content: "Personal Fouls"; }
+
 }

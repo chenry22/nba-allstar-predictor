@@ -89,6 +89,10 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
 
     log_model = model
     predictions = log_model.predict_proba(stats)[:, 1]
+
+    fix_index = pd.to_numeric(df['MPG']) < 10.0
+    predictions[fix_index] = 0.0
+
     predictions = predictions * 100
     predictions = np.round(predictions, decimals=2)
   
@@ -110,11 +114,12 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     df_west.reset_index(drop=True).to_csv(os.path.join(path, 'west_leaders.csv'))
 
     print("Updated leaderboard.")
-    print("Current time is " + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
+    timestring = datetime.today().strftime('%b %d, %Y at %-I:%M%p')
+    print("Current time is " + timestring + '\n')
 
     # Keep track of last updates to show on website
     with open(os.path.join(path, "updatelog.txt"), 'w') as f:
-        f.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S'))
+        f.write(timestring)
 
     return
 
@@ -230,7 +235,6 @@ def daily(func=datascrape):
 
     # We will update every day at 10am
     y = x.replace(day=x.day, hour=10, minute=0, second=0, microsecond=0) + timedelta(days=1)
-    y = x.replace(day=x.day, hour=x.hour, minute=x.minute, second=x.second, microsecond=0) + timedelta(seconds=10)
     delta_t=y-x
 
     secs=delta_t.total_seconds()

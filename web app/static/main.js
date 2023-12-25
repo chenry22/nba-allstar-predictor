@@ -1,3 +1,4 @@
+// Function for parsing a form to be submitted to the predictor
 function submitData() {  
     var form = document.getElementById("inputform");
     var data = new FormData(form)
@@ -125,6 +126,7 @@ function submitData() {
     return false;
 }
 
+// Actual prediction functionality (post form and get prediction)
 function getPredictions(arr_in){
     jQuery.ajax({
         url: '/process',
@@ -136,6 +138,20 @@ function getPredictions(arr_in){
             console.log(response)
             document.getElementById('return_pct').innerHTML = response.prob;
             document.getElementById('return_dec').innerHTML = response.decision;
+
+            if(response.decision == "All-Star."){
+                document.getElementById("returns-bg").style.backgroundColor = "#4AA784";
+                document.getElementById("returns-bg").style.color = "black";
+
+                document.getElementById("returns").style.backgroundColor = "#4AA784";
+                document.getElementById("returns").style.color = "black";
+            } else{
+                document.getElementById("returns-bg").style.backgroundColor = "#E10D10";
+                document.getElementById("returns-bg").style.color = "white";
+
+                document.getElementById("returns").style.backgroundColor = "#E10D10";
+                document.getElementById("returns").style.color = "white";
+            }
         }, 
         error: function(error) { 
             console.log(error); 
@@ -143,6 +159,7 @@ function getPredictions(arr_in){
     }); 
 }
 
+// Updates search results while typing
 function searchUpdate(){
     fetch('/static/data/curr_player.csv').then(response => {
         if (!response.ok) {
@@ -177,6 +194,7 @@ function searchUpdate(){
     .catch(error => console.error('Fetch error:', error));
 }
 
+// Fills out form on search submission (and auto submits form)
 function searchGetData() {
     fetch('/static/data/curr_player.csv').then(response => {
         if (!response.ok) {
@@ -228,6 +246,7 @@ function searchGetData() {
     return false;
 }
 
+// Parse CSV helper function
 function parseCSV(csvContent, selectedColumns) {
     var lines = csvContent.split('\n');
     var headers = lines[0].split(',');
@@ -249,6 +268,7 @@ function parseCSV(csvContent, selectedColumns) {
     return dataArray;
 }
 
+// Helper function to find matching search results
 function matchCurrentText(data){
     var input = document.getElementById("search_input").value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     if(input.length < 1){
@@ -278,10 +298,177 @@ function matchCurrentText(data){
     return matching;
 }
 
+// Leaderboard data loader
+function loadLeaderboardData(){
+    // Update western conference
+    fetch('/static/data/east_leaders.csv').then(response => {
+        if (!response.ok) {
+            throw new Error('File not found');
+        }
+        return response.text();
+    })
+    .then(data => {
+        var leaderboard = parseCSV(data, 
+            ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
+            "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
+            "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent", "% All Star"]);
+
+        var slots = document.getElementsByClassName('player-east');
+
+        for(var i = 0; i < 15; i++){
+            var cols = slots[i].getElementsByTagName('td');
+            var player = leaderboard[i];
+
+            cols[0].innerHTML = i + 1;
+            cols[1].innerHTML = player['Name'];
+            cols[2].innerHTML = player['Team'];
+            cols[3].innerHTML = player['Position'];
+            cols[4].innerHTML = player['Age'];
+            cols[5].innerHTML = player['Previous Times All-Star'];
+            cols[6].innerHTML = player['% All Star'];
+
+            switch(player["Team"]){
+                case "BOS":
+                    slots[i].style.backgroundColor = "#50D952";
+                    break;
+                case "MIL":
+                    slots[i].style.backgroundColor = "#33A264";
+                    break;
+                case "PHI":
+                    slots[i].style.backgroundColor = "#7B80FE";
+                    break;
+                case "ATL":
+                    slots[i].style.backgroundColor = "#D9907F";
+                    break;
+                case "IND":
+                    slots[i].style.backgroundColor = "#CFE937";
+                    break;
+                case "NYK":
+                    slots[i].style.backgroundColor = "#F9A041";
+                    break;
+                case "MIA":
+                    slots[i].style.backgroundColor = "#FD4176";
+                    break;
+                case "CLE":
+                    slots[i].style.backgroundColor = "#B83535";
+                    break;
+                case "CHI":
+                    slots[i].style.backgroundColor = "FF0000";
+                    break;
+                case "TOR":
+                    slots[i].style.backgroundColor = "#F44244";
+                    break;
+                case "ORL":
+                    slots[i].style.backgroundColor = "#5BAAE4";
+                    break;
+                case "BRK":
+                    slots[i].style.backgroundColor = "#848484";
+                    break;
+                case "CHO":
+                    slots[i].style.backgroundColor = "#63A7D9";
+                    break;
+                case "DET":
+                    slots[i].style.backgroundColor = "#D76466";
+                    break;
+                case "WAS":
+                    slots[i].style.backgroundColor = "#E775CD";
+                    break;
+            }
+        }
+    })
+
+    // Update eastern conference
+    fetch('/static/data/west_leaders.csv').then(response => {
+        if (!response.ok) {
+            throw new Error('File not found');
+        }
+        return response.text();
+    })
+    .then(data => {
+        var leaderboard = parseCSV(data, 
+            ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
+            "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
+            "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent", "% All Star"]);
+
+        var slots = document.getElementsByClassName('player-west');
+
+        for(var i = 0; i < 15; i++){
+            var cols = slots[i].getElementsByTagName('td');
+            var player = leaderboard[i];
+
+            cols[0].innerHTML = i + 1;
+            cols[1].innerHTML = player['Name'];
+            cols[2].innerHTML = player['Team'];
+            cols[3].innerHTML = player['Position'];
+            cols[4].innerHTML = player['Age'];
+            cols[5].innerHTML = player['Previous Times All-Star'];
+            cols[6].innerHTML = player['% All Star'];
+
+            switch(player["Team"]){
+                case "DAL":
+                    slots[i].style.backgroundColor = "#5281DB";
+                    break;
+                case "DEN":
+                    slots[i].style.backgroundColor = "#ECE16A";
+                    break;
+                case "GSW":
+                    slots[i].style.backgroundColor = "#8985FF";
+                    break;
+                case "HOU":
+                    slots[i].style.backgroundColor = "#F35151";
+                    break;
+                case "LAC":
+                    slots[i].style.backgroundColor = "#FBFBFB";
+                    break;
+                case "LAL":
+                    slots[i].style.backgroundColor = "#FEFF4F";
+                    break;
+                case "MEM":
+                    slots[i].style.backgroundColor = "#838EC2";
+                    break;
+                case "MIN":
+                    slots[i].style.backgroundColor = "#8585BF";
+                    break;
+                case "NOP":
+                    slots[i].style.backgroundColor = "#DBF5A2";
+                    break;
+                case "OKC":
+                    slots[i].style.backgroundColor = "#DDF5FF";
+                    break;
+                case "PHO":
+                    slots[i].style.backgroundColor = "#FCBC4D";
+                    break;
+                case "POR":
+                    slots[i].style.backgroundColor = "#DF8573";
+                    break;
+                case "SAC":
+                    slots[i].style.backgroundColor = "#A479E8";
+                    break;
+                case "SAS":
+                    slots[i].style.backgroundColor = "#AFAFAF";
+                    break;
+                case "UTA":
+                    slots[i].style.backgroundColor = "#A48BBB";
+                    break;
+            }
+        }
+    })
+
+    return;
+}
+
+
 
 // close dropdown if not clicking on it 
 window.onclick = function(event) {
     var dropdown = document.getElementById('search-dropdown');
+
+    if(dropdown == null){
+        return;
+    }
+
     if (event.target !== document.getElementById('search-input') && !event.target.closest('.search-container')) {
       dropdown.style.display = 'none';
     }

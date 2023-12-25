@@ -1,0 +1,400 @@
+<link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='style.css')}}">
+<script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NBA All-Star Predictor</title>
+  </head>
+
+  <!-- Top navigation bar -->
+  <div class="topnav">
+    <ul>
+      <li id="logo"><img src="" alt="LOGO"></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="#leaderboard" class="active">Leaderboard</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+
+  <body>
+    <h1 class="title">Daily Leaderboard</h1>
+
+    <p class="descript">This page is a daily updated leaderboard tracking the most likely NBA All-Stars
+        based on their current projected statistics. Similarly to the main search feature, the games
+        played/started statistics are projected to be the maximum possible based on current games missed.
+    </p>
+    <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
+
+    <br><br>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard">
+        <h2 class="table-title"><u>East Leaders</u></h2>
+        <table id="east">
+            <tr id="table-head">
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Pos.</th>
+                <th>Age</th>
+                <th>Prev. All-Star</th>
+                <th>% All-Star</th>
+            </tr>
+            
+            <!-- Rank 1 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 2 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 3 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 4 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 5 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 6 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 7 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 8 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 9 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 10 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 11 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 12 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 13 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 14 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 15 -->
+            <tr class="player-east">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <br><br><br>
+        
+        <h2 class="table-title"><u>West Leaders</u></h2>
+        <table id="west">
+            <tr id="table-head">
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Pos.</th>
+                <th>Age</th>
+                <th>Prev. All-Star</th>
+                <th>% All-Star</th>
+            </tr>
+            
+            <!-- Rank 1 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 2 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 3 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 4 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 5 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 6 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 7 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 8 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 9 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 10 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 11 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 12 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 13 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 14 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <!-- Rank 15 -->
+            <tr class="player-west">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Data loader -->
+    <script type="text/javascript">
+        loadLeaderboardData();
+    </script>
+
+    <div id="bottom"></div>
+  </body>
+</html>

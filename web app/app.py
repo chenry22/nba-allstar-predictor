@@ -27,6 +27,9 @@ def getPrediction(arr_in):
 
     prob = log_model.predict_proba(in_df)[0];
 
+    if (float(in_df['MPG'][0]) < 10):
+        prob[1] = 0
+
     str_out = "";
     thrs = 0.75
 
@@ -42,10 +45,10 @@ def getPrediction(arr_in):
 
     return ret
 
-@app.route('/')
+@app.route('/', methods = ['GET', 'POST'])
 def main():
     f = open(os.path.join(basedir, "static/data/updatelog.txt"), 'r')
-    timelog = f.readline().replace(" ", " at ")
+    timelog = f.readline()
     return render_template('index.html', timelog=timelog)
 
 @app.route('/process', methods=['POST']) 
@@ -59,6 +62,11 @@ def get_file(filename):
     print("Requesting data " + filename)
     return send_from_directory('static/data/', filename)
 
+@app.route('/leaderboard', methods = ['GET', 'POST'])
+def get_leaderboard():
+    f = open(os.path.join(basedir, "static/data/updatelog.txt"), 'r')
+    timelog = f.readline()
+    return render_template('leaderboard.html', timelog=timelog)
 
 
 if __name__ == "__main__":
