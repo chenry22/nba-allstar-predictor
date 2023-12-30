@@ -1,6 +1,5 @@
 <link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='style.css')}}">
 <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +13,7 @@
       <li id="logo"><img src="" alt="LOGO"></li>
       <li><a href="/">Home</a></li>
       <li><a href="#leaderboard" class="active">Leaderboard</a></li>
-      <li><a href="#about">About</a></li>
+      <li><a href="/about">About</a></li>
     </ul>
   </div>
 
@@ -29,12 +28,13 @@
 
     <br><br>
 
-    <!-- Leaderboard -->
+    <!-- East Leaderboard -->
     <div id="leaderboard">
         <h2 class="table-title"><u>East Leaders</u></h2>
         <table id="east">
             <tr id="table-head">
                 <th>Rank</th>
+                <th>Daily</th>
                 <th>Name</th>
                 <th>Team</th>
                 <th>Pos.</th>
@@ -44,7 +44,7 @@
             </tr>
             
             <!-- Rank 1 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 0)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -52,10 +52,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 2 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 1)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -63,10 +67,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 3 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 2)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -74,10 +82,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 4 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 3)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -85,10 +97,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 5 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 4)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -96,10 +112,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 6 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 5)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -107,10 +127,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 7 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 6)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -118,10 +142,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 8 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 7)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -129,10 +157,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 9 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 8)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -140,10 +172,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 10 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 9)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -151,10 +187,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 11 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 10)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -162,10 +202,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 12 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 11)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -173,10 +217,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 13 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 12)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -184,10 +232,15 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
 
             <!-- Rank 14 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 13)">
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -196,9 +249,12 @@
                 <td></td>
                 <td></td>
             </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
+            </tr>
 
             <!-- Rank 15 -->
-            <tr class="player-east">
+            <tr class="player-east" onclick="toggleData('east', 14)">
                 <td></td>
                 <td></td>
                 <td></td>
@@ -206,27 +262,22 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-east hidden">
+                <td colspan="8"></td>
             </tr>
         </table>
+    </div>
 
-        <br><br><br>
-        
-        <h2 class="table-title"><u>West Leaders</u></h2>
-        <table id="west">
-            <tr id="table-head">
-                <th>Rank</th>
-                <th>Name</th>
-                <th>Team</th>
-                <th>Pos.</th>
-                <th>Age</th>
-                <th>Prev. All-Star</th>
-                <th>% All-Star</th>
-            </tr>
-            
-            <!-- Rank 1 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
+    <br>
+
+    <!-- Projected Lineup -->
+    <div id="lineup">
+        <h3 class="table-title"><i><u>Projected Lineup</i></u></h3>
+        <table>
+            <tr class="lineup-east">
+                <th>Starters</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -234,21 +285,8 @@
                 <td></td>
             </tr>
 
-            <!-- Rank 2 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 3 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
+            <tr class="lineup-east">
+                <th>Bench</th>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -256,139 +294,291 @@
                 <td></td>
             </tr>
 
-            <!-- Rank 4 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 5 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 6 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 7 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 8 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 9 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 10 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 11 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 12 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 13 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 14 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-
-            <!-- Rank 15 -->
-            <tr class="player-west">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+            <tr class="lineup-east">
+                <th>Wildcard</th>
                 <td></td>
                 <td></td>
             </tr>
         </table>
     </div>
+
+    <div style="height:150px"></div>
+    
+    <!-- West Leaderboard -->
+    <div id="leaderboard">
+        <h2 class="table-title"><u>West Leaders</u></h2>
+        <table id="west">
+            <tr id="table-head">
+                <th>Rank</th>
+                <th>Daily</th>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Pos.</th>
+                <th>Age</th>
+                <th>Prev. All-Star</th>
+                <th>% All-Star</th>
+            </tr>
+            
+            <!-- Rank 1 -->
+            <tr class="player-west" onclick="toggleData('west', 0)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 2 -->
+            <tr class="player-west" onclick="toggleData('west', 1)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 3 -->
+            <tr class="player-west" onclick="toggleData('west', 2)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 4 -->
+            <tr class="player-west" onclick="toggleData('west', 3)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 5 -->
+            <tr class="player-west" onclick="toggleData('west', 4)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 6 -->
+            <tr class="player-west" onclick="toggleData('west', 5)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 7 -->
+            <tr class="player-west" onclick="toggleData('west', 6)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 8 -->
+            <tr class="player-west" onclick="toggleData('west', 7)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 9 -->
+            <tr class="player-west" onclick="toggleData('west', 8)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 10 -->
+            <tr class="player-west" onclick="toggleData('west', 9)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 11 -->
+            <tr class="player-west" onclick="toggleData('west', 10)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 12 -->
+            <tr class="player-west" onclick="toggleData('west', 11)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 13 -->
+            <tr class="player-west" onclick="toggleData('west', 12)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 14 -->
+            <tr class="player-west" onclick="toggleData('west', 13)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+
+            <!-- Rank 15 -->
+            <tr class="player-west" onclick="toggleData('west', 14)">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr class="data-west hidden">
+                <td colspan="8"></td>
+            </tr>
+        </table>
+    </div>
+
+    <br>
+
+    <!-- Projected Lineup -->
+    <div id="lineup">
+        <h3 class="table-title"><i><u>Projected Lineup</i></u></h3>
+        <table>
+            <tr class="lineup-west">
+                <th>Starters</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr class="lineup-west">
+                <th>Bench</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr class="lineup-west">
+                <th>Wildcard</th>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <br><br><br>
 
     <!-- Data loader -->
     <script type="text/javascript">

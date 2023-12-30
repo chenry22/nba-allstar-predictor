@@ -68,6 +68,9 @@ def get_leaderboard():
     timelog = f.readline()
     return render_template('leaderboard.html', timelog=timelog)
 
+@app.route('/about', methods=['GET', 'POST'])
+def get_about():
+    return render_template('about.html')
 
 if __name__ == "__main__":
     app.run()

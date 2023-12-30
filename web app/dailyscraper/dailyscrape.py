@@ -27,6 +27,7 @@ teams_full = ["n/a", "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlo
               "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Minnesota Timberwolves", "New Orleans Pelicans",
               "Oklahoma City Thunder", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Utah Jazz"]
 
+# Helper functions
 class RepeatTimer(Timer):
     def run(self):
         while not self.finished.wait(self.interval):
@@ -75,6 +76,29 @@ def gamesStats(x, df, played):
             print(x)
             return 0
 
+def findChange(x, df):
+    name = x["Name"]
+    rank = int(x.name) + 1
+
+    prev = df[df["Name"] == name]
+
+    if prev.size > 0:
+        prev = prev.iloc[0]
+        prev_rank = int(prev.name) + 1
+        change = prev_rank - rank
+
+        if change == 0:
+            return "="
+        elif change < 0:
+            return str(change)
+        else:
+            return "+" + str(change)
+
+    return "n/a"
+
+
+
+# Main functions
 def updateLeaderboard(df, outfile='curr_player.csv'):
     # No null values
     df = df.reset_index(drop=True)
@@ -107,11 +131,22 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     df_east = df[df["Team"].isin(east)]
     df_west = df[df["Team"].isin(west)]
 
-    df_east = df_east.sort_values(by=['% All Star'], ascending=False).iloc[:20]
-    df_west = df_west.sort_values(by=['% All Star'], ascending=False).iloc[:20]
+    df_east = df_east.sort_values(by=['% All Star'], ascending=False).iloc[:30]
+    df_west = df_west.sort_values(by=['% All Star'], ascending=False).iloc[:30]
 
-    df_east.reset_index(drop=True).to_csv(os.path.join(path, 'east_leaders.csv'))
-    df_west.reset_index(drop=True).to_csv(os.path.join(path, 'west_leaders.csv'))
+    df_east = df_east.reset_index(drop=True)
+    df_west = df_west.reset_index(drop=True)
+
+    if os.path.exists(os.path.join(path, 'east_leaders.csv')):
+        temp = pd.read_csv(os.path.join(path, 'east_leaders.csv'))
+        df_east["Change"] = df_east.apply(lambda x : findChange(x, temp), axis=1)
+
+    if os.path.exists(os.path.join(path, 'west_leaders.csv')):
+        temp = pd.read_csv(os.path.join(path, 'west_leaders.csv'))
+        df_west["Change"] = df_west.apply(lambda x: findChange(x, temp), axis=1)
+
+    df_east.to_csv(os.path.join(path, 'east_leaders.csv'))
+    df_west.to_csv(os.path.join(path, 'west_leaders.csv'))
 
     print("Updated leaderboard.")
     timestring = datetime.today().strftime('%b %d, %Y at %-I:%M%p')

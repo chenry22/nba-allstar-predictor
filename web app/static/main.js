@@ -170,8 +170,6 @@ function searchUpdate(){
     .then(data => {
         var dataArray = parseCSV(data, ["", "Name"]);
         var matching = matchCurrentText(dataArray);
-        
-        console.log("Data in JavaScript format:", matching);
 
         var input = document.getElementById('search_input');
         var dropdown = document.getElementById('search-dropdown');
@@ -312,68 +310,153 @@ function loadLeaderboardData(){
             ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
             "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
             "FT%", "ORB", "DRB", "AST", "STL", "BLK",
-            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent", "% All Star"]);
+            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent",
+            "% All Star", "Change"]);
 
         var slots = document.getElementsByClassName('player-east');
+
+        var stats = document.getElementsByClassName('data-east');
+
+        var lineup = document.getElementsByClassName('lineup-east');
+        var front = 0;
+        var back = 0;
+        var wild = 0;
+        var temp = null;
 
         for(var i = 0; i < 15; i++){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
+            var color = '';
+
+            var dataString = "\n" + player["Games Played"] + " games played    -    " + 
+                player["Games Started"] + " games started    -    " +
+                player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
+                String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
+                player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
+                player["BLK"] + " bpg\n\n" + parseFloat(player["FG%"]).toFixed(2) + " fg%    -    " + 
+                parseFloat(player["3P%"]).toFixed(2) + " 3p%    -    " + parseFloat(player["FT%"]).toFixed(2) + " ft%    -    " +
+                player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
+                player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
+                player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
+                player["PF"] + " fpg\n\n";
 
             cols[0].innerHTML = i + 1;
-            cols[1].innerHTML = player['Name'];
-            cols[2].innerHTML = player['Team'];
-            cols[3].innerHTML = player['Position'];
-            cols[4].innerHTML = player['Age'];
-            cols[5].innerHTML = player['Previous Times All-Star'];
-            cols[6].innerHTML = player['% All Star'];
+            cols[1].innerHTML = player['Change'];
+            cols[2].innerHTML = player['Name'];
+            cols[3].innerHTML = player['Team'];
+            cols[4].innerHTML = player['Position'];
+            cols[5].innerHTML = player['Age'];
+            cols[6].innerHTML = player['Previous Times All-Star'];
+            cols[7].innerHTML = player['% All Star'];
+
+            stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
 
             switch(player["Team"]){
                 case "BOS":
-                    slots[i].style.backgroundColor = "#50D952";
+                    color = "#50D952";
                     break;
                 case "MIL":
-                    slots[i].style.backgroundColor = "#33A264";
+                    color = "#33A264";
                     break;
                 case "PHI":
-                    slots[i].style.backgroundColor = "#7B80FE";
+                    color = "#7B80FE";
                     break;
                 case "ATL":
-                    slots[i].style.backgroundColor = "#D9907F";
+                    color = "#D9907F";
                     break;
                 case "IND":
-                    slots[i].style.backgroundColor = "#CFE937";
+                    color = "#CFE937";
                     break;
                 case "NYK":
-                    slots[i].style.backgroundColor = "#F9A041";
+                    color = "#F9A041";
                     break;
                 case "MIA":
-                    slots[i].style.backgroundColor = "#FD4176";
+                    color = "#FD4176";
                     break;
                 case "CLE":
-                    slots[i].style.backgroundColor = "#B83535";
+                    color = "#B83535";
                     break;
                 case "CHI":
-                    slots[i].style.backgroundColor = "FF0000";
+                    color = "FF0000";
                     break;
                 case "TOR":
-                    slots[i].style.backgroundColor = "#F44244";
+                    color = "#F44244";
                     break;
                 case "ORL":
-                    slots[i].style.backgroundColor = "#5BAAE4";
+                    color = "#5BAAE4";
                     break;
                 case "BRK":
-                    slots[i].style.backgroundColor = "#848484";
+                    color = "#848484";
                     break;
                 case "CHO":
-                    slots[i].style.backgroundColor = "#63A7D9";
+                    color = "#63A7D9";
                     break;
                 case "DET":
-                    slots[i].style.backgroundColor = "#D76466";
+                    color = "#D76466";
                     break;
                 case "WAS":
-                    slots[i].style.backgroundColor = "#E775CD";
+                    color = "#E775CD";
                     break;
+            }
+
+            // hex color converter
+            var bigint = parseInt(color.slice(1), 16);
+            var red = (bigint >> 16) & 255;
+            var green = (bigint >> 8) & 255;
+            var blue = bigint & 255;
+            stats[i].style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',0.5)';
+
+            if(front + back + wild < 12){
+                if(player['Position'].charAt(1) == 'G'){
+                    if(front < 2){
+                        temp = lineup[0].getElementsByTagName('td')[front];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        front++;
+                    } else if(front < 4){
+                        temp = lineup[1].getElementsByTagName('td')[front - 2];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        front++;
+                    } else if(wild < 2){
+                        temp = lineup[2].getElementsByTagName('td')[wild];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        wild++;
+                    }
+                } else{
+                    if(back < 3){
+                        temp = lineup[0].getElementsByTagName('td')[back + 2];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        back++;
+                    } else if(back < 6){
+                        temp = lineup[1].getElementsByTagName('td')[back - 1];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        back++;
+                    } else if(wild < 2){
+                        temp = lineup[2].getElementsByTagName('td')[wild];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        wild++;
+                    }
+                }
+            }
+
+            for(var j = 2; j < 8; j++){
+                cols[j].style.backgroundColor = color;
+            }
+
+            cols[0].style.backgroundColor = 'wheat';
+            
+            var change = player['Change'].charAt(0);
+            if(change == '+'){
+                cols[1].style.backgroundColor = 'lightgreen';
+            } else if(change == '-'){
+                cols[1].style.backgroundColor = 'salmon';
+            } else{
+                cols[1].style.backgroundColor = 'grey';
             }
         }
     })
@@ -390,73 +473,172 @@ function loadLeaderboardData(){
             ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
             "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
             "FT%", "ORB", "DRB", "AST", "STL", "BLK",
-            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent", "% All Star"]);
+            "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent",
+            "% All Star", "Change"]);
 
         var slots = document.getElementsByClassName('player-west');
+
+        var stats = document.getElementsByClassName('data-west');
+
+        var lineup = document.getElementsByClassName('lineup-west');
+        var front = 0;
+        var back = 0;
+        var wild = 0;
+        var temp = null;
 
         for(var i = 0; i < 15; i++){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
+            var color = "";
+
+            var dataString = "\n" + player["Games Played"] + " games played    -    " + 
+                player["Games Started"] + " games started    -    " +
+                player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
+                String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
+                player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
+                player["BLK"] + " bpg\n\n" + parseFloat(player["FG%"]).toFixed(2) + " fg%    -    " + 
+                parseFloat(player["3P%"]).toFixed(2) + " 3p%    -    " + parseFloat(player["FT%"]).toFixed(2) + " ft%    -    " +
+                player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
+                player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
+                player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
+                player["PF"] + " fpg\n\n";
 
             cols[0].innerHTML = i + 1;
-            cols[1].innerHTML = player['Name'];
-            cols[2].innerHTML = player['Team'];
-            cols[3].innerHTML = player['Position'];
-            cols[4].innerHTML = player['Age'];
-            cols[5].innerHTML = player['Previous Times All-Star'];
-            cols[6].innerHTML = player['% All Star'];
+            cols[1].innerHTML = player['Change'];
+            cols[2].innerHTML = player['Name'];
+            cols[3].innerHTML = player['Team'];
+            cols[4].innerHTML = player['Position'];
+            cols[5].innerHTML = player['Age'];
+            cols[6].innerHTML = player['Previous Times All-Star'];
+            cols[7].innerHTML = player['% All Star'];
+
+            stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
 
             switch(player["Team"]){
                 case "DAL":
-                    slots[i].style.backgroundColor = "#5281DB";
+                    color = "#5281DB";
                     break;
                 case "DEN":
-                    slots[i].style.backgroundColor = "#ECE16A";
+                    color = "#ECE16A";
                     break;
                 case "GSW":
-                    slots[i].style.backgroundColor = "#8985FF";
+                    color = "#8985FF";
                     break;
                 case "HOU":
-                    slots[i].style.backgroundColor = "#F35151";
+                    color = "#F35151";
                     break;
                 case "LAC":
-                    slots[i].style.backgroundColor = "#FBFBFB";
+                    color = "#FBFBFB";
                     break;
                 case "LAL":
-                    slots[i].style.backgroundColor = "#FEFF4F";
+                    color = "#FEFF4F";
                     break;
                 case "MEM":
-                    slots[i].style.backgroundColor = "#838EC2";
+                    color = "#838EC2";
                     break;
                 case "MIN":
-                    slots[i].style.backgroundColor = "#8585BF";
+                    color = "#8585BF";
                     break;
                 case "NOP":
-                    slots[i].style.backgroundColor = "#DBF5A2";
+                    color = "#DBF5A2";
                     break;
                 case "OKC":
-                    slots[i].style.backgroundColor = "#DDF5FF";
+                    color = "#DDF5FF";
                     break;
                 case "PHO":
-                    slots[i].style.backgroundColor = "#FCBC4D";
+                    color = "#FCBC4D";
                     break;
                 case "POR":
-                    slots[i].style.backgroundColor = "#DF8573";
+                    color = "#DF8573";
                     break;
                 case "SAC":
-                    slots[i].style.backgroundColor = "#A479E8";
+                    color = "#A479E8";
                     break;
                 case "SAS":
-                    slots[i].style.backgroundColor = "#AFAFAF";
+                    color = "#AFAFAF";
                     break;
                 case "UTA":
-                    slots[i].style.backgroundColor = "#A48BBB";
+                    color = "#A48BBB";
                     break;
+            }
+
+            var bigint = parseInt(color.slice(1), 16);
+            var red = (bigint >> 16) & 255;
+            var green = (bigint >> 8) & 255;
+            var blue = bigint & 255;
+            stats[i].style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',0.5)';
+
+            if(front + back + wild < 12){
+                if(player['Position'].charAt(1) == 'G'){
+                    if(front < 2){
+                        temp = lineup[0].getElementsByTagName('td')[front];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        front++;
+                    } else if(front < 4){
+                        temp = lineup[1].getElementsByTagName('td')[front - 2];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        front++;
+                    } else if(wild < 2){
+                        temp = lineup[2].getElementsByTagName('td')[wild];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        wild++;
+                    }
+                } else{
+                    if(back < 3){
+                        temp = lineup[0].getElementsByTagName('td')[back + 2];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        back++;
+                    } else if(back < 6){
+                        temp = lineup[1].getElementsByTagName('td')[back - 1];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        back++;
+                    } else if(wild < 2){
+                        temp = lineup[2].getElementsByTagName('td')[wild];
+                        temp.innerHTML = player['Name'];
+                        temp.style.backgroundColor = color;
+                        wild++;
+                    }
+                }
+            }
+
+            for(var j = 2; j < 8; j++){
+                cols[j].style.backgroundColor = color;
+            }
+
+            cols[0].style.backgroundColor = 'wheat';
+            
+            var change = player['Change'].charAt(0);
+            if(change == '+'){
+                cols[1].style.backgroundColor = 'lightgreen';
+            } else if(change == '-'){
+                cols[1].style.backgroundColor = 'salmon';
+            } else{
+                cols[1].style.backgroundColor = 'grey';
             }
         }
     })
 
     return;
+}
+
+function toggleData(location, pos){
+    var data = null;
+
+    if(location == 'east'){
+        data = document.getElementsByClassName('data-east');
+    } else if(location == 'west'){
+        data = document.getElementsByClassName('data-west');
+    } else{
+        console.log("toggle data error");
+        return;
+    }
+
+    data[pos].classList.toggle('hidden');
 }
 
 
@@ -472,4 +654,4 @@ window.onclick = function(event) {
     if (event.target !== document.getElementById('search-input') && !event.target.closest('.search-container')) {
       dropdown.style.display = 'none';
     }
-  };
+};
