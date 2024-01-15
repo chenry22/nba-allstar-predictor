@@ -72,5 +72,17 @@ def get_leaderboard():
 def get_about():
     return render_template('about.html')
 
+@app.route('/fulltable', methods = ['GET', 'POST'])
+def get_fulltable():
+    f = open(os.path.join(basedir, "static/data/updatelog.txt"), 'r')
+    timelog = f.readline()
+    return render_template('fulltable.html', timelog=timelog)
+
+@app.route('/standings', methods = ['GET', 'POST'])
+def get_standings():
+    f = open(os.path.join(basedir, "static/data/updatelog.txt"), 'r')
+    timelog = f.readline()
+    return render_template('standings.html', timelog=timelog)
+
 if __name__ == "__main__":
     app.run()

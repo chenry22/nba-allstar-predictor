@@ -114,19 +114,45 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     log_model = model
     predictions = log_model.predict_proba(stats)[:, 1]
 
+    allstar_bias = stats
+    allstar_bias['Previous Times All-Star'].values[:] = 0
+    bias_predictions = log_model.predict_proba(allstar_bias)[:, 1]
+
     fix_index = pd.to_numeric(df['MPG']) < 10.0
     predictions[fix_index] = 0.0
+    bias_predictions[fix_index] = 0.0
 
     predictions = predictions * 100
     predictions = np.round(predictions, decimals=2)
+
+    bias_predictions = bias_predictions * 100
+    bias_predictions = np.round(bias_predictions, decimals=2)
   
     full = df
     full["% All Star"] = predictions
+    full["Unbiased % All Star"] = bias_predictions
     full = full.sort_values(by=['% All Star'], ascending=False)
 
     path = os.path.dirname(os.path.dirname(os.path.realpath(__name__)))
     path = os.path.join(path, "static/data/")
-    full.reset_index(drop=True).to_csv(os.path.join(path, outfile))
+    full = full.reset_index(drop=True)
+
+    if os.path.exists(os.path.join(path, 'curr_player.csv')):
+        temp = pd.read_csv(os.path.join(path, 'curr_player.csv'))
+        full["Change"] = full.apply(lambda x : findChange(x, temp), axis=1)
+    else:
+        full["Change"] = "="
+    
+    full.to_csv(os.path.join(path, outfile))
+
+    full = full.sort_values(by=['Unbiased % All Star'], ascending=False)
+    if os.path.exists(os.path.join(path, 'unbiased_curr_player.csv')):
+        temp = pd.read_csv(os.path.join(path, 'unbiased_curr_player.csv'))
+        full["Change"] = full.apply(lambda x : findChange(x, temp), axis=1)
+    else:
+        full["Change"] = "="
+    
+    full.to_csv(os.path.join(path, "unbiased_curr_player.csv"))
 
     df_east = df[df["Team"].isin(east)]
     df_west = df[df["Team"].isin(west)]
@@ -149,7 +175,7 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     df_west.to_csv(os.path.join(path, 'west_leaders.csv'))
 
     print("Updated leaderboard.")
-    timestring = datetime.today().strftime('%b %d, %Y at %-I:%M%p')
+    timestring = datetime.today().strftime('%b %d, %Y')
     print("Current time is " + timestring + '\n')
 
     # Keep track of last updates to show on website
@@ -248,6 +274,10 @@ def datascrape(outfile='curr_player.csv'):
     df2["Team"] = df2["Team"].apply(lambda x: teams[int(teams_full.index(x))])
     df2["Games"] = np.array(df2["Wins"]).astype('int') + np.array(df2["Losses"]).astype('int')
 
+    path = os.path.dirname(os.path.dirname(os.path.realpath(__name__)))
+    path = os.path.join(path, "static/data/")
+    df2.to_csv(os.path.join(path, 'standings.csv'))
+
     path = os.path.dirname(os.path.realpath(__name__))
     allstar = pd.read_csv(os.path.join(path, 'allstarplus.csv'))
     counts = allstar["Name"].value_counts()
@@ -259,7 +289,7 @@ def datascrape(outfile='curr_player.csv'):
     df["Games Played"] = df.apply(lambda x : gamesStats(x, df2, True), axis=1)
     df["Games Started"] = df.apply(lambda x : gamesStats(x, df2, False), axis=1)
                                    
-    print("Finished player data compilation. Now updating leaderboard")
+    print("Finished player data compilation + standings update. Now updating leaderboard")
 
     # create leaderboard as well
     updateLeaderboard(df)
@@ -280,4 +310,4 @@ def daily(func=datascrape):
 
 # Just need one call to initialize system
 datascrape()
-daily(datascrape)
+# daily(datascrape)

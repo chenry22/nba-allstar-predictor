@@ -1,0 +1,87 @@
+<link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='style.css')}}">
+<script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
+
+<!-- Sortable table functionality -->
+<script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NBA All-Star Predictor</title>
+  </head>
+
+  <!-- Top navigation bar -->
+  <div class="topnav">
+    <ul>
+      <li id="logo"><img src="" alt="LOGO"></li>
+      <li><a href="/">Predictor</a></li>
+      <li><a href="/leaderboard">Leaderboard</a></li>
+      <li><a href="/fulltable">All Players</a></li>
+      <li><a href="#standings" class="active">Standings</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+
+  <body>
+    <h1 class="title"><u>Current Standings</u></h1>
+    <p class="descript" style="background-color: salmon; padding: 10px 10px;">
+      These are the current standings in the NBA right now, separated by Eastern and Western
+      conference as is customary. You can re-sort based on the different categories by clicking
+      on the respective column header. The rankings are also color-coded based on <b style="color: wheat;">playoff</b>,
+      <b style="color: lightgray;">play-in</b>, or <b style="color: gray;">neither</b> if the post-season were to start right now.
+    </p>
+    <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
+    <br>
+
+    <!-- East Standings -->
+    <h2 class="table-title"><u>Eastern Conference</u></h2>
+    <table id="east-standings" class="sortable">
+        <tr id="table-head">
+            <th class="sorttable_numeric">Rank</th>
+            <th class="sorttable_nosort">Team</th>
+            <th class="sorttable_numeric">Wins</th>
+            <th class="sorttable_numeric">Losses</th>
+            <th class="sorttable_numeric">Win %</th>
+            <th class="sorttable_nosort">GB</th>
+            <th class="sorttable_numeric">PPG</th>
+            <th class="sorttable_numeric">OPPG</th>
+            <th class="sorttable_numeric">Diff</th>
+            <th class="sorttable_numeric">Games</th>
+        </tr>
+
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <br><br><br>
+
+    <!-- West Standings -->
+    <h2 class="table-title"><u>Western Conference</u></h2>
+    <table id="west-standings" class="sortable">
+        <tr id="table-head">
+            <th class="sorttable_numeric">Rank</th>
+            <th class="sorttable_nosort">Team</th>
+            <th class="sorttable_numeric">Wins</th>
+            <th class="sorttable_numeric">Losses</th>
+            <th class="sorttable_numeric">Win %</th>
+            <th class="sorttable_nosort">GB</th>
+            <th class="sorttable_numeric">PPG</th>
+            <th class="sorttable_numeric">OPPG</th>
+            <th class="sorttable_numeric">Diff</th>
+            <th class="sorttable_numeric">Games</th>
+        </tr>
+
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <!-- Data loader -->
+    <script type="text/javascript">
+        loadStandings();
+    </script>
+
+    <div id="bottom"></div> 
+  </body>
+</html>

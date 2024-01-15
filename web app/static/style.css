@@ -382,8 +382,102 @@ input {
 
 
 
-/* Leaderboard table fixer for less wide screens */
+#full-leaderboard {
+    margin-left: auto;
+    margin-right: auto;
 
+    background-color: rgb(211, 204, 191);
+}
+
+#unbiased-leaderboard {
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: rgb(211, 204, 191);
+}
+
+.data-full {
+    white-space: pre;
+}
+
+.unbiased-data-full {
+    white-space: pre;
+}
+
+.full-data-row:hover {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+.full-data-row:hover td {
+    background-color: inherit !important;
+}
+
+#bias-toggle {
+    background-color: floralwhite;
+
+    width: 400px;
+    height: 60px;
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+
+    border: 2px solid black;
+}
+
+#bias-toggle label {
+    width: 250px;
+    margin-right: auto;
+    margin-left: 20px;
+    text-align: center;
+
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+#bias-toggle input {
+    transform: scale(1.75);
+    width: 20px;
+
+    margin-left: auto;
+}
+
+
+
+#east-standings {
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: rgb(211, 204, 191);
+    text-align: center;
+}
+
+#east-standings th {
+    padding: 5px 10px;
+}
+#east-standings td {
+    padding: 5px;
+}
+
+#west-standings {
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: rgb(211, 204, 191);
+    text-align: center;
+}
+
+#west-standings th {
+    padding: 5px 10px;
+}
+
+#west-standings td {
+    padding: 5px;
+}
+
+
+/* Leaderboard table fixer for less wide screens */
 @media 
 only screen and (max-width: 650px), (min-device-width: 768px) and (max-device-width: 1024px)  {
 
