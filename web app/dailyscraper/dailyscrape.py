@@ -127,7 +127,7 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
 
     bias_predictions = bias_predictions * 100
     bias_predictions = np.round(bias_predictions, decimals=2)
-  
+ 
     full = df
     full["% All Star"] = predictions
     full["Unbiased % All Star"] = bias_predictions
@@ -136,6 +136,7 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     path = os.path.dirname(os.path.dirname(os.path.realpath(__name__)))
     path = os.path.join(path, "static/data/")
     full = full.reset_index(drop=True)
+    unbiased = full
 
     if os.path.exists(os.path.join(path, 'curr_player.csv')):
         temp = pd.read_csv(os.path.join(path, 'curr_player.csv'))
@@ -145,14 +146,18 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     
     full.to_csv(os.path.join(path, outfile))
 
-    full = full.sort_values(by=['Unbiased % All Star'], ascending=False)
+    unbiased = unbiased.sort_values(by=['Unbiased % All Star'], ascending=False).reset_index(drop=True)
+
     if os.path.exists(os.path.join(path, 'unbiased_curr_player.csv')):
-        temp = pd.read_csv(os.path.join(path, 'unbiased_curr_player.csv'))
-        full["Change"] = full.apply(lambda x : findChange(x, temp), axis=1)
+        temp = pd.read_csv(os.path.join(path, 'curr_player.csv'))
+        temp2 = pd.read_csv(os.path.join(path, 'unbiased_curr_player.csv'))
+        unbiased["Change"] = unbiased.apply(lambda x : findChange(x, temp), axis=1)
+        unbiased["Daily"] = unbiased.apply(lambda x : findChange(x, temp2), axis=1)
     else:
-        full["Change"] = "="
+        unbiased["Daily"] = "="
+        unbiased["Change"] = "="
     
-    full.to_csv(os.path.join(path, "unbiased_curr_player.csv"))
+    unbiased.to_csv(os.path.join(path, "unbiased_curr_player.csv"))
 
     df_east = df[df["Team"].isin(east)]
     df_west = df[df["Team"].isin(west)]

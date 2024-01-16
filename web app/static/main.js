@@ -878,7 +878,7 @@ function loadAllPlayerData(){
             "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
             "FT%", "ORB", "DRB", "AST", "STL", "BLK",
             "TOV", "PF", "PTS", "Previous Times All-Star", "Win Percent",
-            "% All Star", "Change", "Unbiased % All Star"]);
+            "% All Star", "Change", "Unbiased % All Star", "Daily"]);
 
         var table = document.getElementById('unbiased-leaderboard').getElementsByTagName('tbody')[0];
         var size = leaderboard.length;
@@ -909,8 +909,8 @@ function loadAllPlayerData(){
 
             var rank = row.insertCell(0);
             rank.innerHTML = i + 1;
-            var change = row.insertCell(1);
-            change.innerHTML = player['Change'];
+            var daily = row.insertCell(1);
+            daily.innerHTML = player['Daily'];
             var name = row.insertCell(2);
             name.innerHTML = player['Name'];
             var team = row.insertCell(3);
@@ -923,8 +923,8 @@ function loadAllPlayerData(){
             prev.innerHTML = player['Previous Times All-Star'];
             var chance = row.insertCell(7);
             chance.innerHTML = player['Unbiased % All Star'];
-            var chance = row.insertCell(8);
-            chance.innerHTML = player['% All Star'];
+            var change = row.insertCell(8);
+            change.innerHTML = player['Change'];
 
             var stats_row = table.insertRow(-1);
             stats_row.className = "unbiased-data-full hidden";
@@ -1089,13 +1089,22 @@ function loadAllPlayerData(){
 
             cols[6].style.backgroundColor = 'grey';
             
-            var change = player['Change'].charAt(0);
+            var change = player['Daily'].charAt(0);
             if(change == '+'){
                 cols[1].style.backgroundColor = 'lightgreen';
             } else if(change == '-'){
                 cols[1].style.backgroundColor = 'salmon';
             } else{
                 cols[1].style.backgroundColor = 'grey';
+            }
+            
+            var change = player['Change'].charAt(0);
+            if(change == '+'){
+                cols[8].style.backgroundColor = 'lightgreen';
+            } else if(change == '-'){
+                cols[8].style.backgroundColor = 'salmon';
+            } else{
+                cols[8].style.backgroundColor = 'grey';
             }
         }
     })
