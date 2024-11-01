@@ -5,21 +5,20 @@ import requests
 import os
 import pickle
 
-from datetime import datetime, timedelta
-from threading import Timer
+from datetime import datetime
 
+# TODO: each day, add every ranking to some ranking_history.csv (new column)
+
+curr_year = "2025"
 model = pickle.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__name__))), 'static/allstar_model.sav'), 'rb'))
 
 teams = ["TOT", "ATL", "BOS", "BRK", "CHO", "CHI", "CLE", "DET", "IND", "MIA", 
          "MIL", "NYK", "ORL", "PHI", "TOR", "WAS", "DAL", "DEN", "GSW", "HOU", 
          "LAC", "LAL", "MEM", "MIN", "NOP", "OKC", "PHO", "POR", "SAC", "SAS", "UTA"]
-
 east = ["ATL", "BOS", "BRK", "CHO", "CHI", "CLE", "DET", "IND", "MIA", 
         "MIL", "NYK", "ORL", "PHI", "TOR", "WAS"]
-
 west = ["DAL", "DEN", "GSW", "HOU", "LAC", "LAL", "MEM", "MIN", "NOP",
         "OKC", "PHO", "POR", "SAC", "SAS", "UTA"]
-
 teams_full = ["n/a", "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", 
               "Chicago Bulls", "Cleveland Cavaliers", "Detroit Pistons", "Indiana Pacers", "Miami Heat", 
               "Milwaukee Bucks", "New York Knicks", "Orlando Magic", "Philadelphia 76ers", "Toronto Raptors", 
@@ -28,11 +27,6 @@ teams_full = ["n/a", "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlo
               "Oklahoma City Thunder", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Utah Jazz"]
 
 # Helper functions
-class RepeatTimer(Timer):
-    def run(self):
-        while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
-
 def ptsPerFGA(x):
     fga = x['FGA']
     pts = x['PTS']
@@ -66,20 +60,17 @@ def gamesStats(x, df, played):
         if len(series) > 0:
             return series.iloc[0]
         else:
-            print(x)
             return 0
     else:
         series = (82 - games) + int(x["Games Started"])
         if len(series) > 0:
             return series.iloc[0]
         else:
-            print(x)
             return 0
 
 def findChange(x, df):
     name = x["Name"]
     rank = int(x.name) + 1
-
     prev = df[df["Name"] == name]
 
     if prev.size > 0:
@@ -159,6 +150,36 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     
     unbiased.to_csv(os.path.join(path, "unbiased_curr_player.csv"))
 
+    # now add to history tracker (create new col)
+    today = datetime.today().strftime('%b %d, %Y')
+    if not os.path.exists(os.path.join(path, 'rank_history.csv')):
+        # just create it (names + todays ranking)
+        hist = pd.DataFrame(zip(df["Name"], (df.index + 1)))
+        hist.columns = ["Name", today]
+        hist.to_csv(os.path.join(path, 'rank_history.csv'))
+    else:
+        hist = pd.read_csv(os.path.join(path, 'rank_history.csv'))
+        ranks = {}
+        for index, row in df.iterrows():
+            ranks[row["Name"]] = index + 1
+        hist[today] = hist["Name"].map(ranks)
+        hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col
+        hist.to_csv(os.path.join(path, 'rank_history.csv'))
+
+    if not os.path.exists(os.path.join(path, 'unbiased_rank_history.csv')):
+        # just create it (names + todays ranking)
+        hist = pd.DataFrame(zip(unbiased["Name"], (unbiased.index + 1)))
+        hist.columns = ["Name", today]
+        hist.to_csv(os.path.join(path, 'unbiased_rank_history.csv'))
+    else: 
+        hist = pd.read_csv(os.path.join(path, 'unbiased_rank_history.csv'))
+        ranks = {}
+        for index, row in unbiased.iterrows():
+            ranks[row["Name"]] = index + 1
+        hist[today] = hist["Name"].map(ranks)
+        hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col
+        hist.to_csv(os.path.join(path, 'unbiased_rank_history.csv'))
+
     df_east = df[df["Team"].isin(east)]
     df_west = df[df["Team"].isin(west)]
 
@@ -180,18 +201,17 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     df_west.to_csv(os.path.join(path, 'west_leaders.csv'))
 
     print("Updated leaderboard.")
-    timestring = datetime.today().strftime('%b %d, %Y')
-    print("Current time is " + timestring + '\n')
+    print("     Current time is " + today + '\n')
 
     # Keep track of last updates to show on website
     with open(os.path.join(path, "updatelog.txt"), 'w') as f:
-        f.write(timestring)
+        f.write(today)
 
     return
 
-def datascrape(outfile='curr_player.csv'):
+def datascrape():
     # Get player data
-    URL = "https://www.basketball-reference.com/leagues/NBA_2024_per_game.html"
+    URL = "https://www.basketball-reference.com/leagues/NBA_" + curr_year + "_per_game.html"
     html = requests.get(URL)
 
     data = []
@@ -201,20 +221,17 @@ def datascrape(outfile='curr_player.csv'):
     table_div  = content.find('div', id="all_per_game_stats")
     table_full = table_div.find('table', id="per_game_stats")
     body = table_full.find('tbody')
-    player_rows = body.find_all('tr', class_="full_table")
-    all_rows = body.find_all('tr')
+    player_rows = body.find_all('tr', class_=None)
+    partials = body.find_all('tr', class_="partial_table")
 
-    i = 0
+    j = 0
     for row in player_rows:
-        # Keeping track of current row for all rows
-        # in case of mult. team
-        i += 1
-
         # Converting table row to string array
+        j += 1 # keep track of index
         player = []
 
         all_data = row.find_all('td')
-        player += [str('2024')]
+        player += [curr_year]
         for d in all_data:
             if d.find('a'):
                 player += [str(d.find('a').string)]
@@ -224,37 +241,28 @@ def datascrape(outfile='curr_player.csv'):
                 else:
                     player += ["0"]
 
-        if player[4] == "TOT":
+        if player[3] in ["TOT", "2TM", "3TM", "4TM"]:
             # get table head value
-            check = row.find('th')
             new_team = ""
 
-            while (len(all_rows) > i) & (all_rows[i].find('th') is not None) & (all_rows[i].find('th') == check):
-                new_team = all_rows[i].find_all('td')[3].string
-                i += 1
+            while (len(partials) > j) and partials[j].find("a").string == player[1]:
+                new_team = partials[j].find_all('td')[2].string
+                j += 1
 
-                # python doesn't have early termination for some reason
-                if len(all_rows) <= i:
-                    break
-
-            # Set team var to last team of season
-            player[4] = new_team
-            
-        # Accounting for table breaks counting as headers (only happen
-        # every 20 players though)
-        if int(row.find('th').string) % 20 == 0:
-                i += 1 
+                # Set team var to last team of season
+                player[3] = new_team
 
         data += [player]
 
     df = pd.DataFrame(data)
-    cols = ["Year", "Name", "Position", "Age", "Team", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
+    cols = ["Year", "Name", "Age", "Team", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS", "Awards"]
     df.columns = cols
+    df = df.drop(columns=["Awards"], axis=1)
 
     # Get team data for win %
     teamdata = []
 
-    url = "https://www.basketball-reference.com/leagues/NBA_2024_standings.html"
+    url = "https://www.basketball-reference.com/leagues/NBA_" + curr_year + "_standings.html"
     html = requests.get(url)
     soup = BeautifulSoup(html.content, "html.parser")
     content = soup.find('div', id="content")
@@ -293,26 +301,8 @@ def datascrape(outfile='curr_player.csv'):
     df['PTS/FGA'] = df.apply(ptsPerFGA, axis=1)
     df["Games Played"] = df.apply(lambda x : gamesStats(x, df2, True), axis=1)
     df["Games Started"] = df.apply(lambda x : gamesStats(x, df2, False), axis=1)
-                                   
+                        
     print("Finished player data compilation + standings update. Now updating leaderboard")
-
-    # create leaderboard as well
     updateLeaderboard(df)
 
-# Taken from https://stackoverflow.com/questions/15088037/python-script-to-do-something-at-the-same-time-every-day
-def daily(func=datascrape):
-    x=datetime.today()
-
-    # We will update every day at 10am
-    y = x.replace(day=x.day, hour=10, minute=0, second=0, microsecond=0) + timedelta(days=1)
-    delta_t=y-x
-
-    secs=delta_t.total_seconds()
-
-    # t = Timer(secs, func)
-    t = RepeatTimer(secs, func)
-    t.start()
-
-# Just need one call to initialize system
 datascrape()
-# daily(datascrape)

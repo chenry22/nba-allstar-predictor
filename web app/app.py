@@ -8,12 +8,14 @@ import os
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-model_save = os.path.join(basedir, 'static/allstar_model.sav')
+# model_save = os.path.join(basedir, 'static/allstar_model.sav')
 daily_stats = os.path.join(basedir, 'dailyscraper/current_stats.csv')
 
-def getPrediction(arr_in): 
-    log_model = pickle.load(open(model_save, 'rb'))
+# define model globally
+log_model = pickle.load(open(os.path.join(basedir, 'static/allstar_model.sav'), 'rb'))
+thrs = 0.75
 
+def getPrediction(arr_in): 
     features = ['Games Played', 'Games Started', 'MPG', 'FG', 'FGA',
                 '3P', '3PA', '2P', '2PA', 'FT',
                 'FTA', 'ORB', 'DRB', 'TRB', 'AST',
@@ -30,17 +32,9 @@ def getPrediction(arr_in):
     if (float(in_df['MPG'][0]) < 10):
         prob[1] = 0
 
-    str_out = "";
-    thrs = 0.75
-
-    if prob[1] > thrs:
-        str_out = "All-Star."
-    else:
-        str_out = "Not All-Star."
-
     ret = {
         "prob" : (str(round(prob[1] * 100, 2)) + "%"),
-        "decision" : str_out
+        "decision" : "All-Star." if prob[1] > thrs else  "Not All-Star."
     }
 
     return ret
@@ -55,7 +49,7 @@ def main():
 def process(): 
     data = request.get_json()
     prediction = getPrediction(data)
-    return prediction;
+    return prediction
 
 @app.route('/static/data/<filename>')
 def get_file(filename):

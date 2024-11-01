@@ -8,30 +8,28 @@ import os.path
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-
 import pickle
 
+pd.options.mode.chained_assignment = None  # default='warn'
 
+# TODO: probably could bypass the timeout thing if we masked our network request
+    # this is probably worth it but i don't want to figure it out right now
 
 # CONST.S
-curr_year = 2023
+curr_year = 2024 # this should be in reference to the last all-star data you want
 baseURL = "https://www.basketball-reference.com/"
 
 teams = ["TOT", "ATL", "BOS", "BRK", "CHO", "CHI", "CLE", "DET", "IND", "MIA", 
          "MIL", "NYK", "ORL", "PHI", "TOR", "WAS", "DAL", "DEN", "GSW", "HOU", 
          "LAC", "LAL", "MEM", "MIN", "NOP", "OKC", "PHO", "POR", "SAC", "SAS", "UTA"]
-
 teams_full = ["n/a", "Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", 
               "Chicago Bulls", "Cleveland Cavaliers", "Detroit Pistons", "Indiana Pacers", "Miami Heat", 
               "Milwaukee Bucks", "New York Knicks", "Orlando Magic", "Philadelphia 76ers", "Toronto Raptors", 
               "Washington Wizards", "Dallas Mavericks", "Denver Nuggets", "Golden State Warriors", "Houston Rockets",
               "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Minnesota Timberwolves", "New Orleans Pelicans",
               "Oklahoma City Thunder", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Utah Jazz"]
-
 positions = ["extra so num.s look nicer", "PG", "SG" ,"SF", "PF", "C"]
-
 team_pct_dict = {}
-
 dict = {}
 
 
@@ -60,9 +58,7 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
     table_div = allstar_div.find('div', id="div_all_star_games_nba")
     table = table_div.find_all('tr')
 
-    years = years_back + 4
-    modern = table[2:years]
-
+    modern = table[1:years_back + 1]
     year = []
     games = []
 
@@ -71,7 +67,6 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
         games += [data[4]]
         year += [int(data[0].text)]
 
-    
     link_games = []
     for game in games:
         link_games += [game.find('a').get('href')]
@@ -111,10 +106,9 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
     i = -1
     for player in link_players:
         i += 1
-        lookfor = str("per_game." + str(player_yrs[i]))
+        lookfor = str("per_game_stats." + str(player_yrs[i]))
 
         player_data = []
-
         newURL = str(baseURL + player)
         html = requests.get(newURL)
         soup = BeautifulSoup(html.content, "html.parser")
@@ -122,14 +116,13 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
         meta = soup.find('div', id="info")
         meta = meta.find('div', id="meta")
         name = meta.find('h1')
-        name = name.find('span').string.encode('utf-8')
-        print(name)
+        name = name.find('span').string
 
         player_data += [name]
         player_data += [str(player_yrs[i])]
 
         content = soup.find('div', id="content")        
-        table = content.find('table', id="per_game")
+        table = content.find('table', id="per_game_stats") # updated for new HTML of bball ref
         body = table.find('tbody')
         if body.find('tr', id=lookfor):
             year_stats = body.find('tr', id=lookfor)
@@ -145,8 +138,7 @@ def get_all_star_data(years_back=11, outfile="out.csv"):
         print(str(i + 1) + " / " + str(len(link_players)) + " player stats compiled...")
         time.sleep(3)
 
-    cols = ["Name", "All-Star Year", "Age", "Team", "League", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
-
+    cols = ["Name", "All-Star Year", "Age", "Team", "League", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS", "Awards"]
     df = pd.DataFrame(final_player_data)
     df.columns = cols
     df.to_csv(outfile)
@@ -168,17 +160,17 @@ def get_player_data(start_year=2010, outfile="playerdata.csv"):
 
         soup = BeautifulSoup(html.content, "html.parser")
         content = soup.find('div', id="content")
-        table_div  = content.find('div', id="all_per_game_stats")
+        table_div  = content.find('div', id="div_per_game_stats")
         table_full = table_div.find('table', id="per_game_stats")
         body = table_full.find('tbody')
-        player_rows = body.find_all('tr', class_="full_table")
-        all_rows = body.find_all('tr')
+        player_rows = body.find_all('tr', class_=None)
+        partials = body.find_all('tr', class_="partial_table")
 
-        i = 0
+        j = 0
         for row in player_rows:
             # Keeping track of current row for all rows
             # in case of mult. team
-            i += 1
+            j += 1
 
             # Converting table row to string array
             player = []
@@ -194,26 +186,17 @@ def get_player_data(start_year=2010, outfile="playerdata.csv"):
                     else:
                         player += ["0"]
 
-            if player[4] == "TOT":
+            if player[3] in ["TOT", "2TM", "3TM", "4TM"]:
                 # get table head value
                 check = row.find('th')
                 new_team = ""
 
-                while (len(all_rows) > i) & (all_rows[i].find('th') is not None) & (all_rows[i].find('th') == check):
-                    new_team = all_rows[i].find_all('td')[3].string
-                    i += 1
-
-                    # python doesn't have early termination for some reason
-                    if len(all_rows) <= i:
-                        break
+                while (len(partials) > j) and partials[j].find("a").string == player[1]:
+                    new_team = partials[j].find_all('td')[2].string
+                    j += 1
 
                 # Set team var to last team of season
-                player[4] = new_team
-            
-            # Accounting for table breaks counting as headers (only happen
-            # every 20 players though)
-            if int(row.find('th').string) % 20 == 0:
-                    i += 1 
+                player[3] = new_team
 
             data += [player]
 
@@ -221,7 +204,7 @@ def get_player_data(start_year=2010, outfile="playerdata.csv"):
         time.sleep(3)
 
     df = pd.DataFrame(data)
-    cols = ["Year", "Name", "Position", "Age", "Team", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
+    cols = ["Year", "Name", "Age", "Team", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS", "Awards"]
 
     df.columns = cols
     df.to_csv(outfile)
@@ -247,13 +230,12 @@ def get_prev(x):
 
 def filter_player_data():
     # filter out all stars from mass player data
-
     df = pd.read_csv("allstarplus.csv")
     df2 = pd.read_csv("playerdata.csv")
 
     dict.clear()
     for a, b in zip(df['Name'], df['Previous Times All-Star']):
-        if not a in dict :
+        if not a in dict:
             dict[a] = b
 
     df2["Previous Times All-Star"] = df2["Name"].apply(get_prev)
@@ -323,10 +305,10 @@ def get_team_stats(start_year = 2010, outfile = "teamdata.csv"):
             for row in rows:
                 team = []
                 team += [year]
-                team += [row.find('a').string.encode('utf-8')]
+                team += [row.find('a').string]
                 
                 for stat in row.find_all('td'):
-                    team += [stat.string.encode('utf-8')]
+                    team += [stat.string]
 
                 data += [team]
 
@@ -369,7 +351,7 @@ if not os.path.isfile("allstarplus.csv"):
     else:
         print("     Data file not found. Creating manually using datascraper.")
         print("     (This could take a while due to website restrictions...)")
-        get_all_star_data(years_back=20)
+        get_all_star_data(years_back=22, outfile="allstar.csv")
 
     df = pd.read_csv(checkfile)
     if not 'Previous Times All-Star' in df.columns:
@@ -384,7 +366,6 @@ if not os.path.isfile("allstarplus.csv"):
 
     df.drop(columns=df.columns[0], axis=1, inplace=True)
     df.to_csv("allstarplus.csv")
-
 else:
     print("     All-star data file found.")
 
@@ -413,8 +394,6 @@ if not os.path.isfile("teamdata.csv"):
 else:
     print("     Team data found.")
 
-
-
 # now real data stuff.
 # First we need to make sure each player has an associated win percent
 df = pd.read_csv("teamdata.csv")
@@ -438,19 +417,15 @@ df.drop(columns=df.columns[0], axis=1, inplace=True)
 # clean up null vals (few in terms of overall dataset size, so we're chilling)
 df = df.dropna()
 
-# After looking at initial correlations, lets change our data
-# a bit to better reflect each statistic
-
+# After looking at initial correlations, lets change our data a bit to better reflect each statistic
 # Converting TOV value to AST to TOV ratio instead
 df['AST/TOV'] = df.apply(lambda x: x['TOV'] if x['TOV'] <= 0 else x['AST']/x['TOV'], axis=1)
-
 # Creating new column describing efficiency
 df['PTS/FGA'] = df.apply(lambda x: x['FGA'] if x['FGA'] <= 0 else x['PTS']/x['FGA'], axis=1)
 
 # Lets clean up our data and drop any irrelevant data
 df = df.drop(columns=["Year", "Name"], axis=1)
-
-corrs = zip(df.columns, np.array(df.corr().round(3)["Is All-Star"]))
+corrs = zip(df.columns, np.array(df.corr(numeric_only=True)["Is All-Star"]))
 
 # from these correlations we can get our list of relevant features
 features = ['Games Played', 'Games Started', 'MPG', 'FG', 'FGA',
@@ -460,16 +435,18 @@ features = ['Games Played', 'Games Started', 'MPG', 'FG', 'FGA',
             'Win Percent', 'PTS/FGA']
 target = "Is All-Star"
 
-X = df[features]
+x = df[features]
 y = df[target]
 
-X_train,X_test,y_train,y_test = train_test_split(X, y, test_size=0.2, random_state=30, stratify=y)
-
-# specify solver
+# actually create log model
+X_train,X_test,y_train,y_test = train_test_split(x, y, test_size=0.2, random_state=30, stratify=y)
 log_model = LogisticRegression(solver='liblinear')
 log_model.fit(X_train, y_train)
 
-filename = 'allstar_model.sav'
-# pickle.dump(log_model, open(filename, 'wb'))
+# evaluate log model
+y_pred = log_model.predict(X_test)
+acc = sum(y_pred == y_test) / len(y_test)
+print("Accuracy of model on test set: " + str(acc))
 
-# Now we have our saved model!
+filename = 'allstar_model.sav'
+pickle.dump(log_model, open(filename, 'wb'))

@@ -1,3 +1,6 @@
+// for these data files, we should only require one fetch per session
+var currPlayers = null;
+
 // Function for parsing a form to be submitted to the predictor
 function submitData() {  
     var form = document.getElementById("inputform");
@@ -125,7 +128,6 @@ function submitData() {
 
     return false;
 }
-
 // Actual prediction functionality (post form and get prediction)
 function getPredictions(arr_in){
     jQuery.ajax({
@@ -159,20 +161,40 @@ function getPredictions(arr_in){
     }); 
 }
 
-
-
 // Updates search results while typing
 function searchUpdate(){
-    fetch('/static/data/curr_player.csv').then(response => {
-        if (!response.ok) {
-            throw new Error('File not found');
-        }
-        return response.text();
-    })
-    .then(data => {
-        var dataArray = parseCSV(data, ["", "Name"]);
-        var matching = matchCurrentText(dataArray);
-
+    if(currPlayers == null){
+        fetch('/static/data/curr_player.csv').then(response => {
+            if (!response.ok) {
+                throw new Error('File not found');
+            }
+            return response.text();
+        })
+        .then(data => {
+            var currPlayers = parseCSV(data, ["", "Name"]);
+            var matching = matchCurrentText(currPlayers);
+    
+            var input = document.getElementById('search_input');
+            var dropdown = document.getElementById('search-dropdown');
+            dropdown.innerHTML = '';
+    
+            matching.forEach(function(item) {
+                var div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.textContent = item;
+                div.onclick = function() {
+                  input.value = item;
+                  dropdown.style.display = 'none';
+                  matchCurrentText(dataArray);
+                };
+                dropdown.appendChild(div);
+            });
+    
+            dropdown.style.display = matching.length > 0 ? 'block' : 'none';
+        })
+        .catch(error => console.error('Fetch error:', error));
+    } else {
+        var matching = matchCurrentText(currPlayers);
         var input = document.getElementById('search_input');
         var dropdown = document.getElementById('search-dropdown');
         dropdown.innerHTML = '';
@@ -182,31 +204,68 @@ function searchUpdate(){
             div.className = 'dropdown-item';
             div.textContent = item;
             div.onclick = function() {
-              input.value = item;
-              dropdown.style.display = 'none';
-              matchCurrentText(dataArray);
+                input.value = item;
+                dropdown.style.display = 'none';
+                matchCurrentText(dataArray);
             };
             dropdown.appendChild(div);
         });
 
         dropdown.style.display = matching.length > 0 ? 'block' : 'none';
-    })
-    .catch(error => console.error('Fetch error:', error));
+    }
 }
-
 // Fills out form on search submission (and auto submits form)
 function searchGetData() {
-    fetch('/static/data/curr_player.csv').then(response => {
-        if (!response.ok) {
-            throw new Error('File not found');
-        }
-        return response.text();
-    })
-    .then(data => {
-        var indexCheck = parseCSV(data, ["", "Name"]);
-        var matching = matchCurrentText(indexCheck);
+    if(currPlayerFile == null) {
+        fetch('/static/data/curr_player.csv').then(response => {
+            if (!response.ok) {
+                throw new Error('File not found');
+            }
+            return response.text();
+        })
+        .then(data => {
+            var currPlayers = parseCSV(data, ["", "Name"]);
+            var matching = matchCurrentText(currPlayers);
 
+            var player_index = parseInt(document.getElementById("search_input").dataset.playerIndex);
+            if(isNaN(player_index) || player_index < 0){
+                console.log("Parse Int Error");
+                alert("Player not found.");
+                return false;
+            } else{
+                document.getElementById('search_input').value = matching[0];
+                document.getElementById('search-dropdown').style.display = 'none';
+            }
+
+            var dataArray = parseCSV(data, ["Games Played", "Games Started", "MPG",
+                "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
+                "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"]);
+
+            var dataLabels = ["Games Played", "Games Started", "MPG",
+                "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
+                "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"];
+
+            var slice = dataArray[player_index];
+            console.log("Data: " + slice);
+
+            var form = new FormData(document.getElementById('inputform'));
+            var formKeys = [];
+
+            for(var[key, value] of form){
+                formKeys.push(key);
+            }
+
+            for(var i = 0; i < formKeys.length; i++){
+                document.querySelector("[name='" + formKeys[i] + "']").value = slice[dataLabels[i]];
+            }
+
+            submitData();
+        })
+        .catch(error => console.error('Fetch error:', error));
+    } else {
+        var matching = matchCurrentText(currPlayers);
         var player_index = parseInt(document.getElementById("search_input").dataset.playerIndex);
+
         if(isNaN(player_index) || player_index < 0){
             console.log("Parse Int Error");
             alert("Player not found.");
@@ -238,11 +297,9 @@ function searchGetData() {
             document.querySelector("[name='" + formKeys[i] + "']").value = slice[dataLabels[i]];
         }
 
-        console.log("Finished data parsing of player");
         submitData();
-    })
-    .catch(error => console.error('Fetch error:', error));
-
+    }
+    
     return false;
 }
 
@@ -275,14 +332,11 @@ function matchCurrentText(data){
         return [];
     }
 
-    console.log(input);
-
     var matching = [];
     var index = -1;
 
     for(var i = 0; i < data.length; i++){
         var name = data[i].Name;
-
         if(name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(input) != -1){
             matching.push(name);
             index = data[i][""];
@@ -302,7 +356,6 @@ function matchCurrentText(data){
 
 // Leaderboard data loader
 function loadLeaderboardData(){
-    // Update western conference
     fetch('/static/data/east_leaders.csv').then(response => {
         if (!response.ok) {
             throw new Error('File not found');
@@ -318,9 +371,7 @@ function loadLeaderboardData(){
             "% All Star", "Change"]);
 
         var slots = document.getElementsByClassName('player-east');
-
         var stats = document.getElementsByClassName('data-east');
-
         var lineup = document.getElementsByClassName('lineup-east');
         var front = 0;
         var back = 0;
@@ -330,7 +381,6 @@ function loadLeaderboardData(){
         for(var i = 0; i < 15; i++){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
-            var color = '';
 
             var dataString = "\n" + player["Games Played"] + " games played    -    " + 
                 player["Games Started"] + " games started    -    " +
@@ -344,7 +394,7 @@ function loadLeaderboardData(){
                 player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
                 player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
 
-            cols[0].innerHTML = i + 1;
+            cols[0].innerHTML = "<b>" + (i + 1) + "</b>";
             cols[1].innerHTML = player['Change'];
             cols[2].innerHTML = player['Name'];
             cols[3].innerHTML = player['Team'];
@@ -354,104 +404,39 @@ function loadLeaderboardData(){
             cols[7].innerHTML = player['% All Star'];
 
             stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
-
-            switch(player["Team"]){
-                case "BOS":
-                    color = "#50D952";
-                    break;
-                case "MIL":
-                    color = "#33A264";
-                    break;
-                case "PHI":
-                    color = "#7B80FE";
-                    break;
-                case "ATL":
-                    color = "#D9907F";
-                    break;
-                case "IND":
-                    color = "#CFE937";
-                    break;
-                case "NYK":
-                    color = "#F9A041";
-                    break;
-                case "MIA":
-                    color = "#FD4176";
-                    break;
-                case "CLE":
-                    color = "#B83535";
-                    break;
-                case "CHI":
-                    color = "FF0000";
-                    break;
-                case "TOR":
-                    color = "#F44244";
-                    break;
-                case "ORL":
-                    color = "#5BAAE4";
-                    break;
-                case "BRK":
-                    color = "#848484";
-                    break;
-                case "CHO":
-                    color = "#63A7D9";
-                    break;
-                case "DET":
-                    color = "#D76466";
-                    break;
-                case "WAS":
-                    color = "#E775CD";
-                    break;
-            }
-
-            // hex color converter
-            var bigint = parseInt(color.slice(1), 16);
-            var red = (bigint >> 16) & 255;
-            var green = (bigint >> 8) & 255;
-            var blue = bigint & 255;
-            stats[i].style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',0.5)';
+            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
 
             if(front + back + wild < 12){
                 if(player['Position'].charAt(1) == 'G'){
                     if(front < 2){
                         temp = lineup[0].getElementsByTagName('td')[front];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         front++;
                     } else if(front < 4){
                         temp = lineup[1].getElementsByTagName('td')[front - 2];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         front++;
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         wild++;
                     }
                 } else{
                     if(back < 3){
                         temp = lineup[0].getElementsByTagName('td')[back + 2];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         back++;
                     } else if(back < 6){
                         temp = lineup[1].getElementsByTagName('td')[back - 1];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         back++;
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         wild++;
                     }
                 }
+                temp.innerHTML = player['Name'];
+                temp.classList.add(player["Team"].toLowerCase());
             }
 
             for(var j = 2; j < 8; j++){
-                cols[j].style.backgroundColor = color;
+                cols[j].classList.add(player["Team"].toLowerCase());
             }
-
             cols[0].style.backgroundColor = 'wheat';
             
             var change = player['Change'].charAt(0);
@@ -493,7 +478,6 @@ function loadLeaderboardData(){
         for(var i = 0; i < 15; i++){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
-            var color = "";
 
             var dataString = "\n" + player["Games Played"] + " games played    -    " + 
                 player["Games Started"] + " games started    -    " +
@@ -507,7 +491,7 @@ function loadLeaderboardData(){
                 player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
                 player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
 
-            cols[0].innerHTML = i + 1;
+            cols[0].innerHTML = "<b>" + (i + 1) + "</b>";
             cols[1].innerHTML = player['Change'];
             cols[2].innerHTML = player['Name'];
             cols[3].innerHTML = player['Team'];
@@ -517,101 +501,37 @@ function loadLeaderboardData(){
             cols[7].innerHTML = player['% All Star'];
 
             stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
-
-            switch(player["Team"]){
-                case "DAL":
-                    color = "#5281DB";
-                    break;
-                case "DEN":
-                    color = "#ECE16A";
-                    break;
-                case "GSW":
-                    color = "#8985FF";
-                    break;
-                case "HOU":
-                    color = "#F35151";
-                    break;
-                case "LAC":
-                    color = "#FBFBFB";
-                    break;
-                case "LAL":
-                    color = "#FEFF4F";
-                    break;
-                case "MEM":
-                    color = "#838EC2";
-                    break;
-                case "MIN":
-                    color = "#8585BF";
-                    break;
-                case "NOP":
-                    color = "#DBF5A2";
-                    break;
-                case "OKC":
-                    color = "#DDF5FF";
-                    break;
-                case "PHO":
-                    color = "#FCBC4D";
-                    break;
-                case "POR":
-                    color = "#DF8573";
-                    break;
-                case "SAC":
-                    color = "#A479E8";
-                    break;
-                case "SAS":
-                    color = "#AFAFAF";
-                    break;
-                case "UTA":
-                    color = "#A48BBB";
-                    break;
-            }
-
-            var bigint = parseInt(color.slice(1), 16);
-            var red = (bigint >> 16) & 255;
-            var green = (bigint >> 8) & 255;
-            var blue = bigint & 255;
-            stats[i].style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',0.5)';
-
+            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
             if(front + back + wild < 12){
                 if(player['Position'].charAt(1) == 'G'){
                     if(front < 2){
                         temp = lineup[0].getElementsByTagName('td')[front];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         front++;
                     } else if(front < 4){
                         temp = lineup[1].getElementsByTagName('td')[front - 2];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         front++;
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         wild++;
                     }
                 } else{
                     if(back < 3){
                         temp = lineup[0].getElementsByTagName('td')[back + 2];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         back++;
                     } else if(back < 6){
                         temp = lineup[1].getElementsByTagName('td')[back - 1];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         back++;
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
-                        temp.innerHTML = player['Name'];
-                        temp.style.backgroundColor = color;
                         wild++;
                     }
                 }
+                temp.innerHTML = player['Name'];
+                temp.classList.add(player["Team"].toLowerCase());
             }
 
             for(var j = 2; j < 8; j++){
-                cols[j].style.backgroundColor = color;
+                cols[j].classList.add(player["Team"].toLowerCase());
             }
 
             cols[0].style.backgroundColor = 'wheat';
@@ -674,7 +594,7 @@ function loadAllPlayerData(){
             })(i);
 
             var rank = row.insertCell(0);
-            rank.innerHTML = i + 1;
+            rank.innerHTML = "<b>" + (i + 1) + "</b>";
             var change = row.insertCell(1);
             change.innerHTML = player['Change'];
             var name = row.insertCell(2);
@@ -698,153 +618,9 @@ function loadAllPlayerData(){
             stats.colSpan = 9;
             stats.innerHTML = dataString;
 
-            switch(player["Team"]){
-                case "BOS":
-                    color = "#50D952";
-                    break;
-                case "MIL":
-                    color = "#33A264";
-                    break;
-                case "PHI":
-                    color = "#7B80FE";
-                    break;
-                case "ATL":
-                    color = "#D9907F";
-                    break;
-                case "IND":
-                    color = "#CFE937";
-                    break;
-                case "NYK":
-                    color = "#F9A041";
-                    break;
-                case "MIA":
-                    color = "#FD4176";
-                    break;
-                case "CLE":
-                    color = "#B83535";
-                    break;
-                case "CHI":
-                    color = "FF0000";
-                    break;
-                case "TOR":
-                    color = "#F44244";
-                    break;
-                case "ORL":
-                    color = "#5BAAE4";
-                    break;
-                case "BRK":
-                    color = "#848484";
-                    break;
-                case "CHO":
-                    color = "#63A7D9";
-                    break;
-                case "DET":
-                    color = "#D76466";
-                    break;
-                case "WAS":
-                    color = "#E775CD";
-                    break;
-                case "DAL":
-                    color = "#5281DB";
-                    break;
-                case "DEN":
-                    color = "#ECE16A";
-                    break;
-                case "GSW":
-                    color = "#8985FF";
-                    break;
-                case "HOU":
-                    color = "#F35151";
-                    break;
-                case "LAC":
-                    color = "#FBFBFB";
-                    break;
-                case "LAL":
-                    color = "#FEFF4F";
-                    break;
-                case "MEM":
-                    color = "#838EC2";
-                    break;
-                case "MIN":
-                    color = "#8585BF";
-                    break;
-                case "NOP":
-                    color = "#DBF5A2";
-                    break;
-                case "OKC":
-                    color = "#DDF5FF";
-                    break;
-                case "PHO":
-                    color = "#FCBC4D";
-                    break;
-                case "POR":
-                    color = "#DF8573";
-                    break;
-                case "SAC":
-                    color = "#A479E8";
-                    break;
-                case "SAS":
-                    color = "#AFAFAF";
-                    break;
-                case "UTA":
-                    color = "#A48BBB";
-                    break;
-                case "DAL":
-                    color = "#5281DB";
-                    break;
-                case "DEN":
-                    color = "#ECE16A";
-                    break;
-                case "GSW":
-                    color = "#8985FF";
-                    break;
-                case "HOU":
-                    color = "#F35151";
-                    break;
-                case "LAC":
-                    color = "#FBFBFB";
-                    break;
-                case "LAL":
-                    color = "#FEFF4F";
-                    break;
-                case "MEM":
-                    color = "#838EC2";
-                    break;
-                case "MIN":
-                    color = "#8585BF";
-                    break;
-                case "NOP":
-                    color = "#DBF5A2";
-                    break;
-                case "OKC":
-                    color = "#DDF5FF";
-                    break;
-                case "PHO":
-                    color = "#FCBC4D";
-                    break;
-                case "POR":
-                    color = "#DF8573";
-                    break;
-                case "SAC":
-                    color = "#A479E8";
-                    break;
-                case "SAS":
-                    color = "#AFAFAF";
-                    break;
-                case "UTA":
-                    color = "#A48BBB";
-                    break;
-            }
-
-            var bigint = parseInt(color.slice(1), 16);
-            var red = (bigint >> 16) & 255;
-            var green = (bigint >> 8) & 255;
-            var blue = bigint & 255;
-            stats_row.style.backgroundColor = 'rgba(' + red + ',' + green + ',' + blue + ',0.5)';
-
             var cols = row.getElementsByTagName('td');
             for(var j = 2; j < 9; j++){
-                cols[j].style.backgroundColor = color;
+                cols[j].classList.add(player["Team"].toLowerCase());
             }
 
             if(i < 24){
@@ -1134,8 +910,7 @@ function toggleDataFull(pos){
 }
 
 function unbiasedToggleDataFull(pos){
-    var data = document.getElementsByClassName("unbiased-data-full");
-    
+    var data = document.getElementsByClassName("unbiased-data-full"); 
     data[pos].classList.toggle('hidden');
 }
 
@@ -1163,12 +938,10 @@ function loadStandings(){
 
         for(var i = 0; i < 15; i++){
             var curr = standings[i];
-            var color = '';
-
             var row = east.insertRow(-1);
 
             var rank = row.insertCell(0);
-            rank.innerHTML = i + 1;
+            rank.innerHTML = "<b>" + (i + 1) + "</b>";
             var team = row.insertCell(1);
             team.innerHTML = curr["Team"];
             var wins = row.insertCell(2);
@@ -1188,57 +961,9 @@ function loadStandings(){
             var games = row.insertCell(9);
             games.innerHTML = curr["Games"];
 
-            switch(curr["Team"]){
-                case "BOS":
-                    color = "#50D952";
-                    break;
-                case "MIL":
-                    color = "#33A264";
-                    break;
-                case "PHI":
-                    color = "#7B80FE";
-                    break;
-                case "ATL":
-                    color = "#D9907F";
-                    break;
-                case "IND":
-                    color = "#CFE937";
-                    break;
-                case "NYK":
-                    color = "#F9A041";
-                    break;
-                case "MIA":
-                    color = "#FD4176";
-                    break;
-                case "CLE":
-                    color = "#B83535";
-                    break;
-                case "CHI":
-                    color = "FF0000";
-                    break;
-                case "TOR":
-                    color = "#F44244";
-                    break;
-                case "ORL":
-                    color = "#5BAAE4";
-                    break;
-                case "BRK":
-                    color = "#848484";
-                    break;
-                case "CHO":
-                    color = "#63A7D9";
-                    break;
-                case "DET":
-                    color = "#D76466";
-                    break;
-                case "WAS":
-                    color = "#E775CD";
-                    break;
-            }
-
             var cols = row.getElementsByTagName('td');
             for(var j = 1; j < 10; j++){
-                cols[j].style.backgroundColor = color;
+                cols[j].classList.add(curr["Team"].toLowerCase());
             }
 
             if(i < 6){
@@ -1257,7 +982,7 @@ function loadStandings(){
             var row = west.insertRow(-1);
 
             var rank = row.insertCell(0);
-            rank.innerHTML = i - 14;
+            rank.innerHTML = "<b>" + (i - 14) + "</b>";
             var team = row.insertCell(1);
             team.innerHTML = curr["Team"];
             var wins = row.insertCell(2);
@@ -1277,102 +1002,9 @@ function loadStandings(){
             var games = row.insertCell(9);
             games.innerHTML = curr["Games"];
 
-            switch(curr["Team"]){
-                case "DAL":
-                    color = "#5281DB";
-                    break;
-                case "DEN":
-                    color = "#ECE16A";
-                    break;
-                case "GSW":
-                    color = "#8985FF";
-                    break;
-                case "HOU":
-                    color = "#F35151";
-                    break;
-                case "LAC":
-                    color = "#FBFBFB";
-                    break;
-                case "LAL":
-                    color = "#FEFF4F";
-                    break;
-                case "MEM":
-                    color = "#838EC2";
-                    break;
-                case "MIN":
-                    color = "#8585BF";
-                    break;
-                case "NOP":
-                    color = "#DBF5A2";
-                    break;
-                case "OKC":
-                    color = "#DDF5FF";
-                    break;
-                case "PHO":
-                    color = "#FCBC4D";
-                    break;
-                case "POR":
-                    color = "#DF8573";
-                    break;
-                case "SAC":
-                    color = "#A479E8";
-                    break;
-                case "SAS":
-                    color = "#AFAFAF";
-                    break;
-                case "UTA":
-                    color = "#A48BBB";
-                    break;
-                case "DAL":
-                    color = "#5281DB";
-                    break;
-                case "DEN":
-                    color = "#ECE16A";
-                    break;
-                case "GSW":
-                    color = "#8985FF";
-                    break;
-                case "HOU":
-                    color = "#F35151";
-                    break;
-                case "LAC":
-                    color = "#FBFBFB";
-                    break;
-                case "LAL":
-                    color = "#FEFF4F";
-                    break;
-                case "MEM":
-                    color = "#838EC2";
-                    break;
-                case "MIN":
-                    color = "#8585BF";
-                    break;
-                case "NOP":
-                    color = "#DBF5A2";
-                    break;
-                case "OKC":
-                    color = "#DDF5FF";
-                    break;
-                case "PHO":
-                    color = "#FCBC4D";
-                    break;
-                case "POR":
-                    color = "#DF8573";
-                    break;
-                case "SAC":
-                    color = "#A479E8";
-                    break;
-                case "SAS":
-                    color = "#AFAFAF";
-                    break;
-                case "UTA":
-                    color = "#A48BBB";
-                    break;
-            }
-
             var cols = row.getElementsByTagName('td');
             for(var j = 1; j < 10; j++){
-                cols[j].style.backgroundColor = color;
+                cols[j].classList.add(curr["Team"].toLowerCase());
             }
 
             if(i - 15 < 6){

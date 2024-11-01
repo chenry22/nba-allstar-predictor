@@ -1,26 +1,134 @@
-/* Set background color */
+/* general page styling */
 html {
     background-color: rgb(41, 62, 62);
 }
-
 body {
     margin: 0px;
-    background-color: rgb(189, 188, 188);
+    background-color: rgb(236, 236, 236);
 }
 
-
+/* team-specific styling */
+.bos {
+    background-color: #26a829;
+}
+.mil {
+    background-color: #0b3a1f;
+    color: rgb(187, 231, 190);
+}
+.phi {
+    background-color: #2529a8;
+    color: white;
+}
+.atl {
+    background-color: #962208;
+    color: rgb(241, 209, 28);
+}
+.ind {
+    background-color: #CFE937;
+}
+.nyk {
+    background-color: #d98020;
+    color: rgb(15, 16, 66);
+}
+.mia {
+    background-color: #770d0d;
+    color: white;
+}
+.cle {
+    background-color: #9e2a2a;
+    color: rgb(235, 235, 115);
+}
+.chi {
+    background-color: #a51d1d;
+}
+.tor {
+    background-color: #F44244;
+    color: rgb(48, 3, 48);
+}
+.orl {
+    background-color: #1f6aad;
+    color: rgb(255, 255, 255);
+}
+.brk {
+    background-color: #000000;
+    color: white;
+}
+.cho {
+    background-color: #86b0c1;
+    color: rgb(22, 31, 71);
+}
+.det {
+    background-color: #D76466;
+}
+.was {
+    background-color: #E775CD;
+}
+.dal {
+    background-color: #122955;
+    color: white;
+}
+.den {
+    background-color: #eade5a;
+    color: rgb(13, 13, 33);
+}
+.gsw {
+    background-color: #4b45e0;
+    color: rgb(243, 243, 79);
+}
+.hou {
+    background-color: #F35151;
+}
+.lac {
+    background-color: #FBFBFB;
+    color: rgb(17, 42, 133);
+}
+.lal {
+    background-color: #fbfb1f;
+    color: rgb(86, 2, 101);
+}
+.mem {
+    background-color: #838EC2;
+}
+.min {
+    background-color: #9a9abf;
+    color: rgb(21, 19, 47);
+}
+.nop {
+    background-color: #DBF5A2;
+}
+.okc {
+    background-color: #456cd7;
+    color: rgb(255, 255, 255);
+}
+.pho {
+    background-color: #ffac1d;
+    color: rgb(23, 7, 29);
+}
+.por {
+    background-color: #18110f;
+    color: rgb(255, 55, 55);
+}
+.sac {
+    background-color: #4a159e;
+    color: rgb(201, 183, 210);
+}
+.sas {
+    background-color: #AFAFAF;
+}
+.uta {
+    background-color: #503b63;
+    color: rgb(255, 255, 103);
+}
 
 /* Add a black background color to the top navigation */
 .topnav {
     background-color: rgb(41, 62, 62);
     margin: 0px;
 }
-
 #logo {
     margin-right: 25px;
     margin-left: -20px;
 }
-
 .topnav ul {
     list-style-type: none;
     margin: 0px;
@@ -31,7 +139,6 @@ body {
     justify-content: left;
     align-items: center;
 }
-
 .topnav li {
     display: inline-block;
     text-align: center;
@@ -57,7 +164,7 @@ body {
 .topnav a.active {
     background-color: rgb(226, 63, 63);
     color: white;
-  }
+}
 
 
 
@@ -81,15 +188,12 @@ body {
     
     background-color: rgb(133, 145, 255);
 }
-
 #returns h3 {
     margin-right: 5%;
 }
-
 #returns p {
     font-size: 20;
 }
-
 #returns-bg {
     display: flex;
     justify-content: center;
@@ -102,17 +206,15 @@ body {
     
     background-color: rgb(133, 145, 255);
 }
-
 #returns-bg h3 {
     margin-right: 5%;
 }
-
 #returns-bg p {
     font-size: 20;
 }
 
 
-
+/* General page style */
 p.descript {
     text-align: center;
     font-size-adjust: 0.6;
@@ -120,25 +222,20 @@ p.descript {
     margin-left: 10%;
     margin-right: 10%;
 }
-
 h1.title {
     margin-top: 5%;
     text-align: center;
 
     font-size-adjust: 0.8;
 }
-
 .center {
     text-align: center;
 }
-
-
 
 #table_div {
     margin: 0 auto;
     padding: 10px;
 }
-
 #table_div table, th, td {
     border: 1px solid black;
     margin-left: auto;
@@ -146,12 +243,10 @@ h1.title {
 
     font-size-adjust: 0.5;
 }
-
 #inputform label {
     font-family: Georgia, 'Times New Roman', Times, serif;
     text-decoration-line: underline;
 }
-
 #table_div th {
     padding: 10px;
     width: 100px;
@@ -159,7 +254,6 @@ h1.title {
     background-color: rgb(68, 70, 80);
     color: white;
 }
-
 #table_div td {
     padding-left: 2.5vw;
     padding-right: 2.5vw;
@@ -170,13 +264,10 @@ h1.title {
     font-weight: bold;
 }
 
-
-
 #button-center {
     display: flex;
     justify-content: center;
 }
-
 #button-center button{
     font-size: 20;
     padding: 2%;
@@ -196,7 +287,6 @@ label {
 
     font-weight: bold;
 }
-  
 input {
     width: 100px;
     text-align: left;
@@ -207,7 +297,6 @@ input {
     
     font-size: 15;
 }
-
 #form_container {
     display: flex;
     flex-flow: row wrap;
@@ -218,7 +307,6 @@ input {
     margin-right: 50px;
     background-color: rgb(182, 195, 219);
 }
-
 #form_container div {
     display: flex;
     flex-direction: row;
@@ -235,14 +323,11 @@ input {
     background-color: rgb(162, 180, 213);
 }
 
-
-
 #bottom {
  padding: 50px;   
 }
 
-
-
+/* Search feature styling */
 .search-container {
     position: relative;
     display: inline-block;
@@ -250,7 +335,6 @@ input {
     margin: 40px;
     justify-content: center;
 }
-
 .search-container input {
     width: 300px;
     padding: 10px 15px;
@@ -259,12 +343,10 @@ input {
 
     vertical-align: middle;
 }
-
 .search-container button {
     width: 60px;
     height: 45px;
 }
-
 #search-dropdown {
     display: none;
     position: absolute;
@@ -278,141 +360,121 @@ input {
     width: 298px;
     z-index: 1;
 }
-
 .dropdown-item {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #eee;
 }
-
 .dropdown-item:hover {
     background-color: rgb(202, 239, 249, 50);
 }
 
-
-
+/* general eaderboard stuff*/
 #leaderboard table {
     margin-left: auto;
     margin-right: auto;
 
     background-color: rgb(211, 204, 191);
 }
-
 #leaderboard td {
     text-align: center;
 }
-
 #table-head {
     background-color: black;
     color: white;
 }
-
 #leaderboard th {
     padding: 10px 15px;
 }
-
 #leaderboard td {
     padding: 5px 10px;
 }
-
 .player-east:hover {
+    color: darkred !important;
     background-color: white !important;
     cursor: pointer;
 }
-
 .player-west:hover {
+    color: darkred !important;
     background-color: white !important;
     cursor: pointer;
 }
-
 .player-east:hover td {
+    color: inherit !important;
     background-color: inherit !important;
 }
-
 .player-west:hover td {
+    color: inherit !important;
     background-color: inherit !important;
 }
-
 .data-east {
     white-space: pre;
 }
-
 .data-west {
     white-space: pre;
 }
-
 .hidden {
     display: none;
 }
 
-
-
+/* project lineup styling */
 .table-title {
     text-align: center;
     margin-top: 20px;
     font-weight: bold;
 }
-
 #lineup table {
     margin-left: auto;
     margin-right: auto;
 
 }
-
 #lineup th {
     background-color: rgb(52, 52, 52);
     color: rgb(216, 216, 216);
     padding: 10px 10px;
 }
-
 #lineup td {
     max-width: 110px;
     height: 70px;
     padding: 10px 10px;
     text-align: center;
 
-    background-color: rgb(211, 204, 191);
+    /* background-color: rgb(211, 204, 191); */
 }
-
 #lineup td:hover {
     color: darkred;
     background-color: white !important;
     cursor: pointer;
 }
 
-
-
+/* More leaderboard stuff */
 #full-leaderboard {
     margin-left: auto;
     margin-right: auto;
 
     background-color: rgb(211, 204, 191);
 }
-
 #unbiased-leaderboard {
     margin-left: auto;
     margin-right: auto;
 
     background-color: rgb(211, 204, 191);
 }
-
 .data-full {
     white-space: pre;
 }
-
 .unbiased-data-full {
     white-space: pre;
 }
-
 .full-data-row:hover {
+    color: darkred !important;
     background-color: white !important;
     cursor: pointer;
 }
-
 .full-data-row:hover td {
+    color: inherit !important;
     background-color: inherit !important;
 }
-
 #bias-toggle {
     background-color: floralwhite;
 
@@ -425,7 +487,6 @@ input {
 
     border: 2px solid black;
 }
-
 #bias-toggle label {
     width: 250px;
     margin-right: auto;
@@ -435,7 +496,6 @@ input {
     font-size: 20px;
     white-space: nowrap;
 }
-
 #bias-toggle input {
     transform: scale(1.75);
     width: 20px;
@@ -443,8 +503,7 @@ input {
     margin-left: auto;
 }
 
-
-
+/* standings page */
 #east-standings {
     margin-left: auto;
     margin-right: auto;
@@ -452,14 +511,12 @@ input {
     background-color: rgb(211, 204, 191);
     text-align: center;
 }
-
 #east-standings th {
     padding: 5px 10px;
 }
 #east-standings td {
     padding: 5px;
 }
-
 #west-standings {
     margin-left: auto;
     margin-right: auto;
@@ -467,11 +524,9 @@ input {
     background-color: rgb(211, 204, 191);
     text-align: center;
 }
-
 #west-standings th {
     padding: 5px 10px;
 }
-
 #west-standings td {
     padding: 5px;
 }
