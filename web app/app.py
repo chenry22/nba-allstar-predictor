@@ -79,4 +79,4 @@ def get_standings():
     return render_template('standings.html', timelog=timelog)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=8000)

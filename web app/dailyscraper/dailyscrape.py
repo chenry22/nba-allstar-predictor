@@ -160,7 +160,7 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     else:
         hist = pd.read_csv(os.path.join(path, 'rank_history.csv'))
         ranks = {}
-        for index, row in df.iterrows():
+        for index, row in full.iterrows():
             ranks[row["Name"]] = index + 1
         hist[today] = hist["Name"].map(ranks)
         hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col
@@ -174,7 +174,7 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     else: 
         hist = pd.read_csv(os.path.join(path, 'unbiased_rank_history.csv'))
         ranks = {}
-        for index, row in unbiased.iterrows():
+        for index, row in unbiased.sort_values(by=['% All Star'], ascending=False).iterrows():
             ranks[row["Name"]] = index + 1
         hist[today] = hist["Name"].map(ranks)
         hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col

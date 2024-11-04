@@ -20,7 +20,7 @@
   </div>
 
   <body>
-    <h1 class="title"><u>Full Player Table</u></h1>
+    <h1 class="title">Full Player Table</h1>
 
     <p class="descript">This the full leaderboard tracking all players' All-Star likelihood
         based on their current projected statistics. Similarly to the main search feature, the games
@@ -50,17 +50,53 @@
     <!-- Toggle Previous All-Star Bias -->
     <form>
         <div id="bias-toggle">
-                <input type="checkbox" onclick="toggleFullTableBias()" id="bias-checkbox"/>
-                <label for="bias-checkbox">Toggle Previous All-Star Bias</label>
+            <input type="checkbox" onclick="toggleFullTableBias()" id="bias-checkbox"/>
+            <label for="bias-checkbox">Toggle Previous All-Star Bias</label>
         </div>
     </form>
+
+    <br>
+
+    <!-- Filter by team -->
+    <div id="team-filter-div">
+        <div class="atl off" onclick="addFilterByTeam('atl')">ATL</div>
+        <div class="bos off" onclick="addFilterByTeam('bos')">BOS</div>
+        <div class="brk off" onclick="addFilterByTeam('brk')">BRK</div>
+        <div class="chi off" onclick="addFilterByTeam('chi')">CHI</div>
+        <div class="cho off" onclick="addFilterByTeam('cho')">CHO</div>
+        <div class="cle off" onclick="addFilterByTeam('cle')">CLE</div>
+        <div class="dal off" onclick="addFilterByTeam('dal')">DAL</div>
+        <div class="den off" onclick="addFilterByTeam('den')">DEN</div>
+        <div class="det off" onclick="addFilterByTeam('det')">DET</div>
+        <div class="gsw off" onclick="addFilterByTeam('gsw')">GSW</div>
+        <div class="hou off" onclick="addFilterByTeam('hou')">HOU</div>
+        <div class="ind off" onclick="addFilterByTeam('ind')">IND</div>
+        <div class="lac off" onclick="addFilterByTeam('lac')">LAC</div>
+        <div class="lal off" onclick="addFilterByTeam('lal')">LAL</div>
+        <div class="mem off" onclick="addFilterByTeam('mem')">MEM</div>
+        <div class="mia off" onclick="addFilterByTeam('mia')">MIA</div>
+        <div class="mil off" onclick="addFilterByTeam('mil')">MIL</div>
+        <div class="min off" onclick="addFilterByTeam('min')">MIN</div>
+        <div class="nop off" onclick="addFilterByTeam('nop')">NOP</div>
+        <div class="nyk off" onclick="addFilterByTeam('nyk')">NYK</div>
+        <div class="okc off" onclick="addFilterByTeam('okc')">OKC</div>
+        <div class="orl off" onclick="addFilterByTeam('orl')">ORL</div>
+        <div class="phi off" onclick="addFilterByTeam('phi')">PHI</div>
+        <div class="pho off" onclick="addFilterByTeam('pho')">PHO</div>
+        <div class="por off" onclick="addFilterByTeam('por')">POR</div>
+        <div class="sac off" onclick="addFilterByTeam('sac')">SAC</div>
+        <div class="sas off" onclick="addFilterByTeam('sas')">SAS</div>
+        <div class="tor off" onclick="addFilterByTeam('tor')">TOR</div>
+        <div class="uta off" onclick="addFilterByTeam('uta')">UTA</div>
+        <div class="was off" onclick="addFilterByTeam('was')">WAS</div>
+    </div>
 
     <br>
 
     <!-- Leaderboard -->
     <div id="leaderboard">
         <h2 class="table-title"><u>All NBA Players</u></h2>
-        <table id="full-leaderboard" class="hidden">
+        <table id="full-leaderboard">
             <tr id="table-head">
                 <th>Rank</th>
                 <th>Daily</th>
