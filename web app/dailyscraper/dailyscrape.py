@@ -7,8 +7,6 @@ import pickle
 
 from datetime import datetime
 
-# TODO: each day, add every ranking to some ranking_history.csv (new column)
-
 curr_year = "2025"
 model = pickle.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__name__))), 'static/allstar_model.sav'), 'rb'))
 

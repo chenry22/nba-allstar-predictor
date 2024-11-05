@@ -613,10 +613,12 @@ function loadBiasedTable() {
     head.insertCell(8).innerHTML = "Unbiased %";
 
     var size = leaderboard.length;
+    var skip = 0;
     for(var i = 0; i < size; i++){
         var player = leaderboard[i];
 
         if(teamFilters.length > 0 && !teamFilters.includes(player["Team"].toLowerCase())){
+            skip++;
             continue;
         }
 
@@ -638,7 +640,7 @@ function loadBiasedTable() {
             row.addEventListener("click", function() {
                 toggleDataFull(index);
             });
-        })(i);
+        })(i - skip);
 
         var rank = row.insertCell(0);
         rank.innerHTML = "<b>" + (i + 1) + "</b>";
@@ -698,14 +700,16 @@ function loadUnbiasedTable() {
     head.insertCell(4).innerHTML = "Pos.";
     head.insertCell(5).innerHTML = "Age";
     head.insertCell(6).innerHTML = "Prev. All-Star";
-    head.insertCell(7).innerHTML = "% All-Star";
-    head.insertCell(8).innerHTML = "Unbiased %";
+    head.insertCell(7).innerHTML = "Unbiased %";
+    head.insertCell(8).innerHTML = "Bias Change";
 
     var size = unbiasedLeaderboard.length;
+    var skip = 0;
     for(var i = 0; i < size; i++){
         var player = unbiasedLeaderboard[i];
 
         if(teamFilters.length > 0 && !teamFilters.includes(player["Team"].toLowerCase())){
+            skip++;
             continue;
         }
 
@@ -727,7 +731,7 @@ function loadUnbiasedTable() {
             row.addEventListener("click", function() {
                 unbiasedToggleDataFull(index);
             });
-        })(i);
+        })(i - skip);
 
         var rank = row.insertCell(0);
         rank.innerHTML = "<b>" + (i + 1) + "</b>";
@@ -805,7 +809,6 @@ function toggleData(location, pos){
 }
 function toggleDataFull(pos){
     var data = document.getElementsByClassName("data-full");
-    
     data[pos].classList.toggle('hidden');
 }
 function unbiasedToggleDataFull(pos){
@@ -816,6 +819,8 @@ function unbiasedToggleDataFull(pos){
 function toggleFullTableBias(){
     document.getElementById('full-leaderboard').classList.toggle('hidden');
     document.getElementById('unbiased-leaderboard').classList.toggle('hidden');
+    
+    document.getElementById("bias-checkbox").checked ? loadUnbiasedTable() : loadBiasedTable();
 }
 
 // filter data by teams

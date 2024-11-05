@@ -627,7 +627,7 @@ input {
 }
 #team-filter-div div:hover {
     border: solid white 2px;
-    margin: 1px;
+    margin: 0.5px;
 }
 div.off {
     background-color: rgb(67, 63, 63);
