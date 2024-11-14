@@ -13,7 +13,9 @@ The website also maintains leaderboards for all NBA players that have played dur
 - [ ] Track weekly changes in leaderboard predictions
 - [ ] Show when request is loading
 - [ ] Team logos (draw them myself or copyright free versions)
-- [ ] Filter leaderboard by team
+- [ ] Player dropdown shows last game
+- [ ] Search by biggest risers / fallers (above some threshold, like we probably don't care about someone who is +36 but changed from 0.001 to 0.003)
+- [x] Filter leaderboard by team
 - [ ] Make website look nicer (CSS and style updgrades) (colors + fonts)
 
 ### Known Issues

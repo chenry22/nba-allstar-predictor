@@ -1,16 +1,14 @@
 // for these data files, we should only require one fetch per session
 var currPlayers = null;
-
 var leaderboard = null;
 var unbiasedLeaderboard = null;
 
 var teamFilters = [];
 
 // Function for parsing a form to be submitted to the predictor
-function submitData() {  
+function submitData() { 
     var form = document.getElementById("inputform");
-    var data = new FormData(form)
-    console.log(data.get("name"))
+    var data = new FormData(form);
     var inputArray = new Array();
 
     // Make sure inputs are valid (no negatives, plausible ranges, etc)
@@ -130,7 +128,6 @@ function submitData() {
     }
 
     getPredictions(inputArray);
-
     return false;
 }
 // Actual prediction functionality (post form and get prediction)
@@ -168,60 +165,62 @@ function getPredictions(arr_in){
 
 // Updates search results while typing
 function searchUpdate(){
-    if(currPlayers == null){
-        fetch('/static/data/curr_player.csv').then(response => {
-            if (!response.ok) {
-                throw new Error('File not found');
-            }
-            return response.text();
-        })
-        .then(data => {
-            var currPlayers = parseCSV(data, ["", "Name"]);
-            var matching = matchCurrentText(currPlayers);
-    
-            var input = document.getElementById('search_input');
-            var dropdown = document.getElementById('search-dropdown');
-            dropdown.innerHTML = '';
-    
-            matching.forEach(function(item) {
-                var div = document.createElement('div');
-                div.className = 'dropdown-item';
-                div.textContent = item;
-                div.onclick = function() {
-                  input.value = item;
-                  dropdown.style.display = 'none';
-                  matchCurrentText(dataArray);
-                };
-                dropdown.appendChild(div);
-            });
-    
-            dropdown.style.display = matching.length > 0 ? 'block' : 'none';
-        })
-        .catch(error => console.error('Fetch error:', error));
-    } else {
-        var matching = matchCurrentText(currPlayers);
-        var input = document.getElementById('search_input');
-        var dropdown = document.getElementById('search-dropdown');
-        dropdown.innerHTML = '';
+    var matching = matchCurrentText(getCurrPlayerData());
+    var input = document.getElementById('search_input');
+    var dropdown = document.getElementById('search-dropdown');
+    dropdown.innerHTML = '';
 
-        matching.forEach(function(item) {
-            var div = document.createElement('div');
-            div.className = 'dropdown-item';
-            div.textContent = item;
-            div.onclick = function() {
-                input.value = item;
-                dropdown.style.display = 'none';
-                matchCurrentText(dataArray);
-            };
-            dropdown.appendChild(div);
-        });
+    matching.forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'dropdown-item';
+        div.textContent = item;
+        div.onclick = function() {
+            input.value = item;
+            dropdown.style.display = 'none';
+            matchCurrentText(getCurrPlayerData());
+        };
+        dropdown.appendChild(div);
+    });
 
-        dropdown.style.display = matching.length > 0 ? 'block' : 'none';
-    }
+    dropdown.style.display = matching.length > 0 ? 'block' : 'none';
 }
 // Fills out form on search submission (and auto submits form)
 function searchGetData() {
-    if(currPlayerFile == null) {
+    var matching = matchCurrentText(getCurrPlayerData());
+    var player_index = parseInt(document.getElementById("search_input").dataset.playerIndex);
+
+    if(isNaN(player_index) || player_index < 0){
+        console.log("Parse Int Error");
+        alert("Player not found.");
+        return false;
+    } else{
+        document.getElementById('search_input').value = matching[0];
+        document.getElementById('search-dropdown').style.display = 'none';
+    }
+
+    var dataLabels = ["Games Played", "Games Started", "MPG",
+        "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
+        "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"];
+
+    var slice = currPlayers[player_index];
+    var form = new FormData(document.getElementById('inputform'));
+    var formKeys = [];
+
+    for(var[key, value] of form){
+        formKeys.push(key);
+    }
+
+    for(var i = 0; i < formKeys.length; i++){
+        document.querySelector("[name='" + formKeys[i] + "']").value = slice[dataLabels[i]];
+    }
+
+    submitData();
+    return false; // prevent default form submit
+}
+
+// loads data or returns loaded data
+function getCurrPlayerData() {
+    if(currPlayers == null) {
         fetch('/static/data/curr_player.csv').then(response => {
             if (!response.ok) {
                 throw new Error('File not found');
@@ -229,85 +228,16 @@ function searchGetData() {
             return response.text();
         })
         .then(data => {
-            var currPlayers = parseCSV(data, ["", "Name"]);
-            var matching = matchCurrentText(currPlayers);
-
-            var player_index = parseInt(document.getElementById("search_input").dataset.playerIndex);
-            if(isNaN(player_index) || player_index < 0){
-                console.log("Parse Int Error");
-                alert("Player not found.");
-                return false;
-            } else{
-                document.getElementById('search_input').value = matching[0];
-                document.getElementById('search-dropdown').style.display = 'none';
-            }
-
-            var dataArray = parseCSV(data, ["Games Played", "Games Started", "MPG",
+            currPlayers = parseCSV(data, ["", "Name", "Games Played", "Games Started", "MPG",
                 "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
                 "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"]);
-
-            var dataLabels = ["Games Played", "Games Started", "MPG",
-                "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
-                "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"];
-
-            var slice = dataArray[player_index];
-            console.log("Data: " + slice);
-
-            var form = new FormData(document.getElementById('inputform'));
-            var formKeys = [];
-
-            for(var[key, value] of form){
-                formKeys.push(key);
-            }
-
-            for(var i = 0; i < formKeys.length; i++){
-                document.querySelector("[name='" + formKeys[i] + "']").value = slice[dataLabels[i]];
-            }
-
-            submitData();
+            return currPlayers;
         })
         .catch(error => console.error('Fetch error:', error));
     } else {
-        var matching = matchCurrentText(currPlayers);
-        var player_index = parseInt(document.getElementById("search_input").dataset.playerIndex);
-
-        if(isNaN(player_index) || player_index < 0){
-            console.log("Parse Int Error");
-            alert("Player not found.");
-            return false;
-        } else{
-            document.getElementById('search_input').value = matching[0];
-            document.getElementById('search-dropdown').style.display = 'none';
-        }
-
-        var dataArray = parseCSV(data, ["Games Played", "Games Started", "MPG",
-            "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
-            "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"]);
-
-        var dataLabels = ["Games Played", "Games Started", "MPG",
-            "FG", "FGA", "3P", "3PA", "FT", "FTA", "ORB", "DRB", "AST", "STL",
-            "BLK", "TOV", "Previous Times All-Star", "Win Percent", "% All Star"];
-
-        var slice = dataArray[player_index];
-        console.log("Data: " + slice);
-
-        var form = new FormData(document.getElementById('inputform'));
-        var formKeys = [];
-
-        for(var[key, value] of form){
-            formKeys.push(key);
-        }
-
-        for(var i = 0; i < formKeys.length; i++){
-            document.querySelector("[name='" + formKeys[i] + "']").value = slice[dataLabels[i]];
-        }
-
-        submitData();
+        return currPlayers
     }
-    
-    return false;
 }
-
 // Parse CSV helper function
 function parseCSV(csvContent, selectedColumns) {
     var lines = csvContent.split('\n');
@@ -339,7 +269,6 @@ function matchCurrentText(data){
 
     var matching = [];
     var index = -1;
-
     for(var i = 0; i < data.length; i++){
         var name = data[i].Name;
         if(name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(input) != -1){
@@ -511,27 +440,37 @@ function loadLeaderboardData(){
                     if(front < 2){
                         temp = lineup[0].getElementsByTagName('td')[front];
                         front++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(front < 4){
                         temp = lineup[1].getElementsByTagName('td')[front - 2];
                         front++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
                         wild++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     }
                 } else{
                     if(back < 3){
                         temp = lineup[0].getElementsByTagName('td')[back + 2];
                         back++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(back < 6){
                         temp = lineup[1].getElementsByTagName('td')[back - 1];
                         back++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
                         wild++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     }
                 }
-                temp.innerHTML = player['Name'];
-                temp.classList.add(player["Team"].toLowerCase());
             }
 
             for(var j = 2; j < 8; j++){
