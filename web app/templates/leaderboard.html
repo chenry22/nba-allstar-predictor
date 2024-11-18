@@ -10,12 +10,12 @@
   <!-- Top navigation bar -->
   <div class="topnav">
     <ul>
-      <li id="logo"><img src="{{ url_for('static', filename='ball.png') }}" alt="LOGO"></li>
-      <li><a href="/">Predictor</a></li>
-      <li><a href="#leaderboard" class="active">Leaderboard</a></li>
-      <li><a href="/fulltable">All Players</a></li>
-      <li><a href="/standings">Standings</a></li>
-      <li><a href="/about">About</a></li>
+        <li id="logo"><img src="{{ url_for('static', filename='ball.png') }}" alt="LOGO"></li>
+        <li><a href="/">Predictor</a></li>
+        <li><a href="#leaderboard" class="active">Leaderboard</a></li>
+        <li><a href="/fulltable">All Players</a></li>
+        <li><a href="/standings">Standings</a></li>
+        <li><a href="/about">About</a></li>
     </ul>
   </div>
 
@@ -23,9 +23,9 @@
     <h1 class="title">Daily Leaderboard</h1>
 
     <p class="descript">This page is a daily updated leaderboard tracking the most likely NBA All-Stars
-        based on their current projected statistics. Similarly to the main search feature, the games
-        played/started statistics are projected to be the maximum possible based on current games missed.
+        based on their current projected statistics
     </p>
+    <p class="descript" style="font-size: 13;"><i><b>Note: Games played and started are the MAXIMUM possible for a player based on the # games they've missed so far.</b></i></p>
     <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
 
     <br>

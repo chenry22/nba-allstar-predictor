@@ -344,27 +344,37 @@ function loadLeaderboardData(){
                     if(front < 2){
                         temp = lineup[0].getElementsByTagName('td')[front];
                         front++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(front < 4){
                         temp = lineup[1].getElementsByTagName('td')[front - 2];
                         front++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
                         wild++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     }
                 } else{
                     if(back < 3){
                         temp = lineup[0].getElementsByTagName('td')[back + 2];
                         back++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(back < 6){
                         temp = lineup[1].getElementsByTagName('td')[back - 1];
                         back++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     } else if(wild < 2){
                         temp = lineup[2].getElementsByTagName('td')[wild];
                         wild++;
+                        temp.innerHTML = player['Name'];
+                        temp.classList.add(player["Team"].toLowerCase());
                     }
                 }
-                temp.innerHTML = player['Name'];
-                temp.classList.add(player["Team"].toLowerCase());
             }
 
             for(var j = 2; j < 8; j++){

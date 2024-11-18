@@ -11,7 +11,7 @@
   <!-- Top navigation bar -->
   <div class="topnav">
     <ul>
-      <li id="logo"><img src="" alt="LOGO"></li>
+      <li id="logo"><img src="{{ url_for('static', filename='ball.png') }}" alt="LOGO"></li>
       <li><a href="#index" class="active">Predictor</a></li>
       <li><a href="/leaderboard">Leaderboard</a></li>
       <li><a href="/fulltable">All Players</a></li>
@@ -25,19 +25,15 @@
 
     <p class="descript">This is an NBA All-Star predictor powered by a logistic regression model.</p>
     <p class="descript">Using NBA player data over the past decade plus and training a 
-      python program to recognize the expected statistics of an all-star player, we now have 
-      a prediction model that can look at any player's stats and output a class label.</p>
-    <p class="descript"> Specifically, this system uses a logistic regression model to use learned feature weights 
-      to compute the probability of a datapoint belonging to one or the other class.</p>
-    <p class="descript">After training this model with a large dataset, it was evaluated 
-      to have an average accuracy of about 95%.</p>
+      python program to recognize expected statistics of an all-star player, we now have 
+      a prediction model that can look at any season averages and output a class label.
+      After training this model with a large dataset, it was evaluated to have an average accuracy of about 95%.</p>
     <br>
     <div>
       <p class="descript">Enter values to get a prediction or search for specific player data using the search feature!</p>
       <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
       <br>
-      <p class="descript" style="font-size: 13;"><i><b>Note: Games Played and Games Started are calculated based on 
-      MAXIMUM possible for a player based on the current amount of games they have missed.</b></i></p>
+      <p class="descript" style="font-size: 13;"><i><b>Note: Games played and started are the MAXIMUM possible for a player based on the # games they've missed so far.</b></i></p>
       
       <div style="text-align: center;">
         <div class="search-container">
@@ -50,6 +46,7 @@
         </div>
       </div>
 
+      <!-- TODO: Coloring ???? -->
       <!-- Form input section (actual stats) -->
       <div id="form_div">
         <form class="center" id="inputform" onsubmit="return false;">
@@ -75,11 +72,11 @@
               <input type="number" name="fgapg" step="0.01" value="0">
             </div>
             <div>
-              <label for="3ppg">3-pters per Game:</label>
+              <label for="3ppg">3PTers per Game:</label>
               <input type="number" name="3ppg" step="0.01" value="0">
             </div>
             <div>
-              <label for="3papg">3-pt Attempts per Game:</label>
+              <label for="3papg">3PT Attempts per Game:</label>
               <input type="number" name="3papg" step="0.01" value="0">
             </div>
             <div>
@@ -87,39 +84,39 @@
               <input type="number" name="ftpg" step="0.01" value="0">
             </div>
             <div>
-              <label for="ftapg">Free Throw Attempts per Game:   </label>
+              <label for="ftapg">Free Throw Attempts per Game:  </label>
               <input type="number" name="ftapg" step="0.01" value="0">
             </div>
             <div>
-              <label for="orbpg">Offensive Rebounds per Game:   </label>
+              <label for="orbpg">Offensive Rebounds per Game:  </label>
               <input type="number" name="orbpg" step="0.01" value="0">
             </div>  
             <div>
-              <label for="drpg">Defensive Rebounds per Game:   </label>
+              <label for="drpg">Defensive Rebounds per Game:  </label>
               <input type="number" name="drpg" step="0.01" value="0">
             </div>
             <div>
-              <label for="apg">Assists per Game:   </label>
+              <label for="apg">Assists per Game:  </label>
               <input type="number" name="apg" step="0.01" value="0">
             </div>
             <div>
-              <label for="spg">Steals per Game:    </label>
+              <label for="spg">Steals per Game:   </label>
               <input type="number" name="spg" step="0.01" value="0">
             </div>
             <div>
-              <label for="bpg">Blocks per Game:   </label>
+              <label for="bpg">Blocks per Game:  </label>
               <input type="number" name="bpg" step="0.01" value="0">
             </div>
             <div>
-              <label for="tovpg">Turnovers per Game:   </label>
+              <label for="tovpg">Turnovers per Game:  </label>
               <input type="number" name="tovpg" step="0.01" value="0">
             </div>
             <div>
-              <label for="allstarnum">Previous All-Stars:   </label>
+              <label for="allstarnum">Previous All-Star Selections:  </label>
               <input type="number" name="allstarnum" step="1" value="0">
             </div>
             <div>
-              <label for="winpct">Team Win-Loss Ratio:   </label>
+              <label for="winpct">Team Win-Loss %:  </label>
               <input type="number" name="winpct" step="0.01" value="0">
             </div>
           </div>

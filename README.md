@@ -2,6 +2,16 @@
 
 This project involves using Python datascraping to predict future NBA All-Stars based on their current season statistics. Using modern NBA data from the past several years, I developed a logistic regression model to make predictions given any arbitrary input.
 
+#### Repo Layout
+- **[/datascraper](/datascraper/)** - Scripts used to gather all historical NBA data and build + test the predicton model
+  - **[**datascraper.py](/datascraper/datascraper.py)** - Main script which conducts all datascraping and trains the model on the data collected
+  - **[predictor.py](/datascraper/predictor.py)** - Basic script that loads predictor model and produces a prediction based on appropriate input
+- **[/web app](/web%20app/)** - The Flask app that handles the website functionality
+  -**[/dailscraper/dailyscrape.py](/web%20app/dailyscraper/dailyscrape.py)** - Script which handles gathering all player data from current season up to the current date
+  - **[/static](/web%20app/static/)** - All the website stuff, CSV files, JS functions, CSS styling
+  -**[/templates](/web%20app/templates/)** - All the HTML pages
+  -**[app.py](/web%20app/app.py)** - The flask app backend that connects everything
+
 ### Current Site
 You can visit the current version of the website right now using [this link](http://ch22.pythonanywhere.com)! The website's player and team data is updated daily at 10am EST.
 
@@ -9,14 +19,14 @@ Right now the main feature of the website is taking user input and returning som
 
 The website also maintains leaderboards for all NBA players that have played during the current season, with their statistics and predicted all-star probability. There is both a full leaderboard and an all-star leaderboard, which splits players by conference to project actual lineupss.
 
-### Future Goals/Features
+### Goals / Features to Add
 - [ ] Track weekly changes in leaderboard predictions
 - [ ] Show when request is loading
 - [ ] Team logos (draw them myself or copyright free versions)
 - [ ] Player dropdown shows last game
 - [ ] Search by biggest risers / fallers (above some threshold, like we probably don't care about someone who is +36 but changed from 0.001 to 0.003)
-- [x] Filter leaderboard by team
 - [ ] Make website look nicer (CSS and style updgrades) (colors + fonts)
+  - [ ] Colors for main table ? maybe
 
 ### Known Issues
 - [x] Older versions of pickle save data may be corrupt/only work with 'sklearn' imports of version 0.24.1 or lower

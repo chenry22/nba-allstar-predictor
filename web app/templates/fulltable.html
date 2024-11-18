@@ -10,7 +10,7 @@
   <!-- Top navigation bar -->
   <div class="topnav">
     <ul>
-      <li id="logo"><img src="" alt="LOGO"></li>
+      <li id="logo"><img src="{{ url_for('static', filename='ball.png') }}" alt="LOGO"></li>
       <li><a href="/">Predictor</a></li>
       <li><a href="/leaderboard">Leaderboard</a></li>
       <li><a href="#fulltable" class="active">All Players</a></li>
@@ -22,27 +22,26 @@
   <body>
     <h1 class="title">Full Player Table</h1>
 
-    <p class="descript">This the full leaderboard tracking all players' All-Star likelihood
-        based on their current projected statistics. Similarly to the main search feature, the games
-        played/started statistics are projected to be the maximum possible based on current games missed.
+    <p class="descript">This leaderboard tracks all players' All-Star likelihood
+        based on their projected statistics.
 
         <br><br>
 
-        In an analysis of past NBA All-Stars and which statistics were relevant to All-Star
-        likelihood, a strong correlation was found between a player's past All-Star appearances
-        and the probability that player would be an All-Star again. While testing the prediction
+        During the analysis of past NBA All-Stars, a strong correlation was found between a player's past All-Star appearances
+        and the probability a player would be an All-Star again. While testing the prediction
         algorithm, this increased the accuracy of the model by a significant amount, so it is
         considered in all leaderboard evaluations.
         
         <br><br>
         
-        That being said, this program also runs calculations considering an 'unbiased' probability, where
+        That being said, this site also runs calculations considering an 'unbiased' probability, where
         previous All-Star appearances are not considered. You can see these rankings by toggling the
-        checkbox below.
+        checkbox below, which essentially just treats every player as a prospective first time all-star.
         
         <br><br>
     </p>
 
+    <p class="descript" style="font-size: 13;"><i><b>Note: Games played and started are the MAXIMUM possible for a player based on the # games they've missed so far.</b></i></p>
     <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
 
     <br><br>
@@ -87,7 +86,7 @@
   <form>
     <div id="bias-toggle">
         <input type="checkbox" onclick="toggleFullTableBias()" id="bias-checkbox"/>
-        <label for="bias-checkbox">Toggle Previous All-Star Bias</label>
+        <label for="bias-checkbox">Remove Previous All-Star Bias</label>
     </div>
   </form>
 
@@ -95,7 +94,7 @@
 
     <!-- Leaderboard -->
     <div id="leaderboard">
-        <h2 class="table-title"><u>All NBA Players</u></h2>
+        <h2 class="table-title"><u>Current NBA Players</u></h2>
         <table id="full-leaderboard">
             <tr id="table-head">
                 <th>Rank</th>
@@ -110,7 +109,6 @@
             </tr>
             
             <tbody>
-
             </tbody>
         </table>
 
@@ -128,7 +126,6 @@
             </tr>
             
             <tbody>
-
             </tbody>
         </table>
     </div>
