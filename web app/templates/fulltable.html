@@ -15,6 +15,7 @@
       <li><a href="/leaderboard">Leaderboard</a></li>
       <li><a href="#fulltable" class="active">All Players</a></li>
       <li><a href="/standings">Standings</a></li>
+      <li><a href="/history">History</a></li>
       <li><a href="/about">About</a></li>
     </ul>
   </div>
@@ -22,21 +23,19 @@
   <body>
     <h1 class="title">Full Player Table</h1>
 
-    <p class="descript">This leaderboard tracks all players' All-Star likelihood
-        based on their projected statistics.
+    <p class="descript">All players' All-Star likelihood based on their projected statistics.
 
         <br><br>
 
         During the analysis of past NBA All-Stars, a strong correlation was found between a player's past All-Star appearances
-        and the probability a player would be an All-Star again. While testing the prediction
-        algorithm, this increased the accuracy of the model by a significant amount, so it is
-        considered in all leaderboard evaluations.
+        and the probability a player would be an All-Star again. This increased the accuracy of the model by a significant amount, so it is
+        considered in all evaluations.
         
         <br><br>
         
-        That being said, this site also runs calculations considering an 'unbiased' probability, where
+        That being said, we also run calculations considering an 'unbiased' probability, where
         previous All-Star appearances are not considered. You can see these rankings by toggling the
-        checkbox below, which essentially just treats every player as a prospective first time all-star.
+        checkbox below, which essentially treats every player as a first time all-star.
         
         <br><br>
     </p>
@@ -44,7 +43,7 @@
     <p class="descript" style="font-size: 13;"><i><b>Note: Games played and started are the MAXIMUM possible for a player based on the # games they've missed so far.</b></i></p>
     <p class="descript" style="font-size: 13;"><i>(Last updated {{ timelog }})</i></p>
 
-    <br><br>
+    <br>
 
     <!-- Filter by team -->
     <div id="team-filter-div">

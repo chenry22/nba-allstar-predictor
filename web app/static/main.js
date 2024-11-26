@@ -315,18 +315,11 @@ function loadLeaderboardData(){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
 
-            var dataString = "\n" + player["Games Played"] + " games played    -    " + 
-                player["Games Started"] + " games started    -    " +
-                player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
-                String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
-                player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
-                player["BLK"] + " bpg\n\n" + (parseFloat(player["FG%"]) * 100.0).toFixed(1) + " fg%    -    " + 
-                (parseFloat(player["3P%"]) * 100.0).toFixed(1) + " 3p%    -    " + (parseFloat(player["FT%"]) * 100.0).toFixed(1) + " ft%    -    " +
-                player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
-                player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
-                player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
-                player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
+            // flexbox dropdown table thing
+            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
+            stats[i].getElementsByTagName('td')[0].appendChild(createDataDropdown(player));
 
+            // regular table stuff
             cols[0].innerHTML = "<b>" + (i + 1) + "</b>";
             cols[1].innerHTML = player['Change'];
             cols[2].innerHTML = player['Name'];
@@ -335,9 +328,6 @@ function loadLeaderboardData(){
             cols[5].innerHTML = player['Age'];
             cols[6].innerHTML = player['Previous Times All-Star'];
             cols[7].innerHTML = player['% All Star'];
-
-            stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
-            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
 
             if(front + back + wild < 12){
                 if(player['Position'].charAt(1) == 'G'){
@@ -422,17 +412,8 @@ function loadLeaderboardData(){
             var cols = slots[i].getElementsByTagName('td');
             var player = leaderboard[i];
 
-            var dataString = "\n" + player["Games Played"] + " games played    -    " + 
-                player["Games Started"] + " games started    -    " +
-                player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
-                String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
-                player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
-                player["BLK"] + " bpg\n\n" + (parseFloat(player["FG%"]) * 100.0).toFixed(1) + " fg%    -    " + 
-                (parseFloat(player["3P%"]) * 100.0).toFixed(1) + " 3p%    -    " + (parseFloat(player["FT%"]) * 100.0).toFixed(1) + " ft%    -    " +
-                player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
-                player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
-                player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
-                player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
+            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
+            stats[i].getElementsByTagName('td')[0].appendChild(createDataDropdown(player));
 
             cols[0].innerHTML = "<b>" + (i + 1) + "</b>";
             cols[1].innerHTML = player['Change'];
@@ -443,8 +424,6 @@ function loadLeaderboardData(){
             cols[6].innerHTML = player['Previous Times All-Star'];
             cols[7].innerHTML = player['% All Star'];
 
-            stats[i].getElementsByTagName('td')[0].innerHTML = dataString;
-            stats[i].classList.add(player["Team"].toLowerCase() + "_alt");
             if(front + back + wild < 12){
                 if(player['Position'].charAt(1) == 'G'){
                     if(front < 2){
@@ -571,18 +550,6 @@ function loadBiasedTable() {
             continue;
         }
 
-        var dataString = "\n" + player["Games Played"] + " games played    -    " + 
-            player["Games Started"] + " games started    -    " +
-            player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
-            String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
-            player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
-            player["BLK"] + " bpg\n\n" + (parseFloat(player["FG%"]) * 100.0).toFixed(1) + " fg%    -    " + 
-            (parseFloat(player["3P%"]) * 100.0).toFixed(1) + " 3p%    -    " + (parseFloat(player["FT%"]) * 100.0).toFixed(1) + " ft%    -    " +
-            player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
-            player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
-            player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
-            player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
-
         var row = table.insertRow(-1);
         row.className = "full-data-row";
         (function(index) {
@@ -614,7 +581,7 @@ function loadBiasedTable() {
         stats_row.className = "data-full hidden " + player["Team"].toLowerCase() + "_alt";
         var stats = stats_row.insertCell(0);
         stats.colSpan = 9;
-        stats.innerHTML = dataString;
+        stats.appendChild(createDataDropdown(player));
 
         var cols = row.getElementsByTagName('td');
         for(var j = 2; j < 9; j++){
@@ -662,18 +629,6 @@ function loadUnbiasedTable() {
             continue;
         }
 
-        var dataString = "\n" + player["Games Played"] + " games played    -    " + 
-            player["Games Started"] + " games started    -    " +
-            player["MPG"] + " mpg\n\n" + player["PTS"] + " ppg    -    " + 
-            String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1)) + " rbp    -    " + 
-            player["AST"] + " apg    -    " + player["STL"] + " spg    -    " +
-            player["BLK"] + " bpg\n\n" + (parseFloat(player["FG%"]) * 100.0).toFixed(1) + " fg%    -    " + 
-            (parseFloat(player["3P%"]) * 100.0).toFixed(1) + " 3p%    -    " + (parseFloat(player["FT%"]) * 100.0).toFixed(1) + " ft%    -    " +
-            player["FGA"] + " fga    -    " + player["3PA"] + " 3pa    -    " +
-            player["FTA"] + " fta\n\n" + player["ORB"] + " orpg    -    " +
-            player["DRB"] + " drpg    -    " + player["TOV"] + " tpg    -    " +
-            player["PF"] + " fpg   -   " + player["Win Percent"] + " win ratio\n\n";
-
         var row = table.insertRow(-1);
         row.className = "full-data-row";
         (function(index) {
@@ -705,7 +660,7 @@ function loadUnbiasedTable() {
         stats_row.className = "unbiased-data-full hidden " + player["Team"].toLowerCase() + "_alt";
         var stats = stats_row.insertCell(0);
         stats.colSpan = 9;
-        stats.innerHTML = dataString;
+        stats.appendChild(createDataDropdown(player));
 
         var cols = row.getElementsByTagName('td');
         for(var j = 2; j < 9; j++){
@@ -740,6 +695,57 @@ function loadUnbiasedTable() {
             cols[8].style.backgroundColor = 'grey';
         }
     }
+}
+
+// data dropdown stuff
+function createDataDropdown(player){
+    var dataNode = document.createElement('div');
+    dataNode.classList.add("dropdown-data-div");
+
+    // create nodes for each data
+    var container = document.createElement('div')
+    var games = document.createElement('div');
+    games.classList.add("dropdown-header");
+    games.textContent = player["Games Played"] + " Games Played";
+    container.appendChild(games);
+    var starts = document.createElement('div');
+    starts.classList.add("dropdown-header");
+    starts.textContent = player["Games Started"] + " Games Started"; 
+    container.appendChild(starts);
+    dataNode.appendChild(container);
+
+    dataNode.appendChild(createDropDownCell("Minutes", player["MPG"]));
+    dataNode.appendChild(createDropDownCell("PTS", player["PTS"]));
+    dataNode.appendChild(createDropDownCell("RBS", String((parseFloat(player["ORB"]) + parseFloat(player["DRB"])).toFixed(1))));
+    dataNode.appendChild(createDropDownCell("ORB", player["ORB"]));
+    dataNode.appendChild(createDropDownCell("DRB", player["DRB"]));
+    dataNode.appendChild(createDropDownCell("AST", player["AST"]));
+    dataNode.appendChild(createDropDownCell("STL", player["STL"]));
+    dataNode.appendChild(createDropDownCell("BLK", player["BLK"]));
+
+    dataNode.appendChild(createDropDownCell("FG%", (parseFloat(player["FG%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("FGA", player["FGA"]));
+    dataNode.appendChild(createDropDownCell("3P%", (parseFloat(player["3P%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("3PA", player["3PA"]));
+    dataNode.appendChild(createDropDownCell("FT%", (parseFloat(player["FT%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("FTA", player["FTA"]));
+
+    dataNode.appendChild(createDropDownCell("TOV", player["TOV"]));
+    dataNode.appendChild(createDropDownCell("PF", player["PF"]));
+    dataNode.appendChild(createDropDownCell("Team Win %", player["Win Percent"]));
+    return dataNode;
+}
+function createDropDownCell(headerLabel, dataLabel){
+    var header = document.createElement('div');
+    header.textContent = headerLabel;
+    header.classList.add("dropdown-header");
+    var data = document.createElement('div');
+    data.textContent = dataLabel;
+    data.classList.add("dropdown-data");
+    var cell = document.createElement('div');
+    cell.appendChild(header);
+    cell.appendChild(data);
+    return cell;
 }
 
 function toggleData(location, pos){

@@ -86,7 +86,6 @@ def findChange(x, df):
     return "n/a"
 
 
-
 # Main functions
 def updateLeaderboard(df, outfile='curr_player.csv'):
     # No null values
@@ -152,29 +151,58 @@ def updateLeaderboard(df, outfile='curr_player.csv'):
     today = datetime.today().strftime('%b %d, %Y')
     if not os.path.exists(os.path.join(path, 'rank_history.csv')):
         # just create it (names + todays ranking)
-        hist = pd.DataFrame(zip(df["Name"], (df.index + 1)))
-        hist.columns = ["Name", today]
+        hist = pd.DataFrame(zip(df["Name"], df["Team"], (df.index + 1)))
+        hist.columns = ["Name", "Team", today]
         hist.to_csv(os.path.join(path, 'rank_history.csv'))
     else:
         hist = pd.read_csv(os.path.join(path, 'rank_history.csv'))
+        if "Team" not in hist.columns:
+            player_team = full.set_index("Name")["Team"]
+            hist.insert(2, "Team", hist["Name"].map(player_team))
         ranks = {}
         for index, row in full.iterrows():
             ranks[row["Name"]] = index + 1
         hist[today] = hist["Name"].map(ranks)
+        for k, v in ranks.items():
+            if hist["Name"].value_counts().get(k, 0) <= 0:
+                player_team = full.set_index("Name")["Team"]
+                # player not in rankings, add manually
+                rank = len(hist.index)
+                row = [rank, k, player_team[k]]
+                # don't account for index, name, team, or final rank col
+                for _ in range(len(hist.columns) - 4):
+                    row += ["-1"] # to be translated to null in JS
+                row += [str(v)]
+                hist.loc[rank] = row
+
         hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col
         hist.to_csv(os.path.join(path, 'rank_history.csv'))
 
     if not os.path.exists(os.path.join(path, 'unbiased_rank_history.csv')):
         # just create it (names + todays ranking)
-        hist = pd.DataFrame(zip(unbiased["Name"], (unbiased.index + 1)))
-        hist.columns = ["Name", today]
+        hist = pd.DataFrame(zip(df["Name"], df["Team"], (df.index + 1)))
+        hist.columns = ["Name", "Team", today]
         hist.to_csv(os.path.join(path, 'unbiased_rank_history.csv'))
     else: 
         hist = pd.read_csv(os.path.join(path, 'unbiased_rank_history.csv'))
+        if "Team" not in hist.columns:
+            player_team = full.set_index("Name")["Team"]
+            hist.insert(2, "Team", hist["Name"].map(player_team))
         ranks = {}
         for index, row in unbiased.sort_values(by=['% All Star'], ascending=False).iterrows():
             ranks[row["Name"]] = index + 1
         hist[today] = hist["Name"].map(ranks)
+        for k, v in ranks.items():
+            if hist["Name"].value_counts().get(k, 0) <= 0:
+                player_team = full.set_index("Name")["Team"]
+                # player not in rankings, add manually
+                rank = len(hist.index)
+                row = [rank, k, player_team[k]]
+                # don't account for index, name, team, or final rank col
+                for _ in range(len(hist.columns) - 4):
+                    row += ["-1"] # to be translated to null in JS
+                row += [str(v)]
+                hist.loc[rank] = row
         hist.drop(columns=hist.columns[0], axis=1, inplace=True) # clean up hanging index col
         hist.to_csv(os.path.join(path, 'unbiased_rank_history.csv'))
 

@@ -4,15 +4,15 @@ html {
 }
 body {
     margin: 0px;
-    background-color: rgb(236, 236, 236);
+    background-color: rgb(255, 239, 239);
 }
 
 /* team-specific styling */
 .bos {
-    background-color: #26a829;
+    background-color: #38d63a;
 }
 .bos_alt{
-    background-color: #4df150;
+    background-color: #35e038;
 }
 .mil {
     background-color: #0b3a1f;
@@ -36,8 +36,8 @@ body {
     background-color: #f46c4e;
 }
 .ind {
-    background-color: #CFE937;
-    color: rgb(3, 3, 23);
+    background-color: #d9e015;
+    color: rgb(18, 18, 75);
 }
 .ind_alt {
     background-color: #e7ff5f;
@@ -54,7 +54,7 @@ body {
     color: white;
 }
 .mia_alt {
-    background-color: #eb3737;
+    background-color: #ff5d5d;
 }
 .cle {
     background-color: #9e2a2a;
@@ -71,8 +71,8 @@ body {
     background-color: #ff4444;
 }
 .tor {
-    background-color: rgb(92, 11, 119);
-    color: rgb(255, 43, 43);
+    background-color: rgb(87, 9, 112);
+    color: rgb(255, 65, 65);
 }
 .tor_alt {
     background-color: rgb(190, 48, 237);
@@ -112,15 +112,15 @@ body {
     background-color: #fda2e8;
 }
 .dal {
-    background-color: #122955;
+    background-color: #173367;
     color: white;
 }
 .dal_alt {
     background-color: #88a4d7;
 }
 .den {
-    background-color: #eade5a;
-    color: rgb(13, 13, 33);
+    background-color: #fdf165;
+    color: rgb(10, 10, 31);
 }
 .den_alt {
     background-color: #fff586;
@@ -153,17 +153,17 @@ body {
     background-color: #ffff7f;
 }
 .mem {
-    background-color: #838EC2;
+    background-color: #98a3db;
 }
 .mem_alt {
     background-color: #cad3ff;
 }
 .min {
-    background-color: #9a9abf;
-    color: rgb(21, 19, 47);
+    background-color: #334d80;
+    color: rgb(255, 255, 255);
 }
 .min_alt {
-    background-color: #c4c4e6;
+    background-color: #9393c1;
 }
 .nop {
     background-color: #DBF5A2;
@@ -193,14 +193,14 @@ body {
     background-color: #bc654d;
 }
 .sac {
-    background-color: #7417aa;
-    color: rgb(234, 227, 239);
+    background-color: #571591;
+    color: rgb(240, 228, 248);
 }
 .sac_alt {
     background-color: #c978f7;
 }
 .sas {
-    background-color: #AFAFAF;
+    background-color: #c2bebe;
 }
 .sas_alt {
     background-color: #d8d8d8;
@@ -415,7 +415,8 @@ input {
     padding: 10px;
     padding-left: 20px;
     padding-right: 20px;
-    margin: 5px;
+    margin: 2px;
+    border-radius: 5px;
 
     justify-content: center;
     align-items: center;
@@ -520,6 +521,35 @@ input {
     display: none;
 }
 
+/* stats dropdown cells */
+.dropdown-data-div {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+}
+.dropdown-data-div > div {
+    background-color: rgba(255, 255, 255, 0.4);
+    padding: 8px;
+    border-radius: 10px;
+}
+.dropdown-data-div > div > div {
+    padding: 2px;
+}
+.dropdown-header {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: bold;
+    font-style: italic;
+}
+
 /* projected lineup styling */
 .table-title {
     text-align: center;
@@ -611,7 +641,7 @@ input {
 }
 /* team filters */
 #team-filter-div {
-    margin: 10px 200px;
+    margin: 10px 100px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -668,6 +698,13 @@ div.off {
     padding: 5px;
 }
 
+
+/* History graph */
+#graph-container {
+    margin: 0 auto;
+    height: 700px;
+    width: 1000px;
+}
 
 /* Leaderboard table fixer for less wide screens */
 @media 

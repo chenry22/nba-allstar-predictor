@@ -1,0 +1,75 @@
+<link rel="stylesheet"  type="text/css" href="{{url_for('.static', filename='style.css')}}">
+<script type="text/javascript" src="{{ url_for('static', filename='history.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NBA All-Star Predictor</title>
+  </head>
+
+  <!-- Top navigation bar -->
+  <div class="topnav">
+    <ul>
+      <li id="logo"><img src="{{ url_for('static', filename='ball.png') }}" alt="LOGO"></li>
+      <li><a href="/">Predictor</a></li>
+      <li><a href="/leaderboard">Leaderboard</a></li>
+      <li><a href="/fulltable">All Players</a></li>
+      <li><a href="/standings">Standings</a></li>
+      <li><a href="#history" class="active">History</a></li>
+      <li><a href="/about">About</a></li>
+    </ul>
+  </div>
+
+  <body>
+    <h1 class="title">Ranking History</h1>
+
+    <p class="descript">All players' rankings throughout the whole season.</p>
+    <p class="descript"><i>Disclaimer: Players who did not play for the start of the season do not have entries until Nov 26 (sorry)</i></p>
+
+    <!-- Filter by team -->
+    <div id="team-filter-div">
+      <div class="atl off" onclick="selectTeam('atl')">ATL</div>
+      <div class="bos off" onclick="selectTeam('bos')">BOS</div>
+      <div class="brk off" onclick="selectTeam('brk')">BRK</div>
+      <div class="chi off" onclick="selectTeam('chi')">CHI</div>
+      <div class="cho off" onclick="selectTeam('cho')">CHO</div>
+      <div class="cle off" onclick="selectTeam('cle')">CLE</div>
+      <div class="dal off" onclick="selectTeam('dal')">DAL</div>
+      <div class="den off" onclick="selectTeam('den')">DEN</div>
+      <div class="det off" onclick="selectTeam('det')">DET</div>
+      <div class="gsw off" onclick="selectTeam('gsw')">GSW</div>
+      <div class="hou off" onclick="selectTeam('hou')">HOU</div>
+      <div class="ind off" onclick="selectTeam('ind')">IND</div>
+      <div class="lac off" onclick="selectTeam('lac')">LAC</div>
+      <div class="lal off" onclick="selectTeam('lal')">LAL</div>
+      <div class="mem off" onclick="selectTeam('mem')">MEM</div>
+      <div class="mia off" onclick="selectTeam('mia')">MIA</div>
+      <div class="mil off" onclick="selectTeam('mil')">MIL</div>
+      <div class="min off" onclick="selectTeam('min')">MIN</div>
+      <div class="nop off" onclick="selectTeam('nop')">NOP</div>
+      <div class="nyk off" onclick="selectTeam('nyk')">NYK</div>
+      <div class="okc off" onclick="selectTeam('okc')">OKC</div>
+      <div class="orl off" onclick="selectTeam('orl')">ORL</div>
+      <div class="phi off" onclick="selectTeam('phi')">PHI</div>
+      <div class="pho off" onclick="selectTeam('pho')">PHO</div>
+      <div class="por off" onclick="selectTeam('por')">POR</div>
+      <div class="sac off" onclick="selectTeam('sac')">SAC</div>
+      <div class="sas off" onclick="selectTeam('sas')">SAS</div>
+      <div class="tor off" onclick="selectTeam('tor')">TOR</div>
+      <div class="uta off" onclick="selectTeam('uta')">UTA</div>
+      <div class="was off" onclick="selectTeam('was')">WAS</div>
+  </div>
+
+    <div id="graph-container">
+      <canvas id="history-graph"></canvas>
+    </div>
+
+    <script>
+        loadLineGraph();
+    </script>
+
+    <div id="bottom"></div>
+  </body>
+</html>

@@ -3,3 +3,5 @@ all-star-predictor-key.pem
 *.pyc
 *.DS_Store
 */__pycache__
+
+**/node_modules

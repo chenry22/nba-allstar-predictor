@@ -4,20 +4,20 @@ This project involves using Python datascraping to predict future NBA All-Stars 
 
 #### Repo Layout
 - **[/datascraper](/datascraper/)** - Scripts used to gather all historical NBA data and build + test the predicton model
-  - **[**datascraper.py](/datascraper/datascraper.py)** - Main script which conducts all datascraping and trains the model on the data collected
+  - **[datascraper.py](/datascraper/datascraper.py)** - Main script which conducts all datascraping and trains the model on the data collected
   - **[predictor.py](/datascraper/predictor.py)** - Basic script that loads predictor model and produces a prediction based on appropriate input
 - **[/web app](/web%20app/)** - The Flask app that handles the website functionality
   -**[/dailscraper/dailyscrape.py](/web%20app/dailyscraper/dailyscrape.py)** - Script which handles gathering all player data from current season up to the current date
   - **[/static](/web%20app/static/)** - All the website stuff, CSV files, JS functions, CSS styling
-  -**[/templates](/web%20app/templates/)** - All the HTML pages
-  -**[app.py](/web%20app/app.py)** - The flask app backend that connects everything
+  - **[/templates](/web%20app/templates/)** - All the HTML pages
+  - **[app.py](/web%20app/app.py)** - The flask app backend that connects everything
 
 ### Current Site
-You can visit the current version of the website right now using [this link](http://ch22.pythonanywhere.com)! The website's player and team data is updated daily at 10am EST.
+You can visit the current version of the website using [this link](http://ch22.pythonanywhere.com)! The website's data is updated daily at 10am EST.
 
-Right now the main feature of the website is taking user input and returning some prediction. You are able to see both the percentage likelihood determined by the model and the binary prediction. Currently the model has an established threshold of 75%, which was most accurate based on some testing.
+Right now the main feature is taking user input and returning some prediction. You can see both the percentage likelihood determined by the model and the binary prediction. Currently the model has an established threshold of 75% to declare a player an all-star, which was most accurate based on testing.
 
-The website also maintains leaderboards for all NBA players that have played during the current season, with their statistics and predicted all-star probability. There is both a full leaderboard and an all-star leaderboard, which splits players by conference to project actual lineupss.
+The website also maintains a list of NBA players that have played during the current season, with their statistics and all-star probability. There is a full leaderboard and an all-star leaderboard, which splits players by conference to project actual lineupss.
 
 ### Goals / Features to Add
 - [ ] Track weekly changes in leaderboard predictions
