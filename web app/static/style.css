@@ -4,7 +4,7 @@ html {
 }
 body {
     margin: 0px;
-    background-color: rgb(255, 239, 239);
+    background-color: rgb(244, 246, 253);
 }
 
 /* team-specific styling */
@@ -523,7 +523,7 @@ input {
 
 /* stats dropdown cells */
 .dropdown-data-div {
-    max-width: 500px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
@@ -538,16 +538,29 @@ input {
 }
 .dropdown-data-div > div {
     background-color: rgba(255, 255, 255, 0.4);
-    padding: 8px;
+    padding: 6px;
     border-radius: 10px;
 }
 .dropdown-data-div > div > div {
     padding: 2px;
+    font-size: 14px;
 }
 .dropdown-header {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 16px;
     font-weight: bold;
     font-style: italic;
+}
+.dropdown-data-div-parent {
+    max-width: 780px;
+    display: flex;
+    flex-direction: row;
+    margin: 10px auto;
+}
+.divider {
+    width: 4px;
+    margin: 8px;
+    background-color: white;
 }
 
 /* projected lineup styling */
@@ -704,6 +717,23 @@ div.off {
     margin: 0 auto;
     height: 700px;
     width: 1000px;
+}
+
+/* Rank history filters */
+.filter-title {
+    text-align: center;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#range-select-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+#range-select-div div {
+    padding: 5px 30px;
 }
 
 /* Leaderboard table fixer for less wide screens */

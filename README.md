@@ -7,7 +7,7 @@ This project involves using Python datascraping to predict future NBA All-Stars 
   - **[datascraper.py](/datascraper/datascraper.py)** - Main script which conducts all datascraping and trains the model on the data collected
   - **[predictor.py](/datascraper/predictor.py)** - Basic script that loads predictor model and produces a prediction based on appropriate input
 - **[/web app](/web%20app/)** - The Flask app that handles the website functionality
-  -**[/dailscraper/dailyscrape.py](/web%20app/dailyscraper/dailyscrape.py)** - Script which handles gathering all player data from current season up to the current date
+  - **[/dailscraper/dailyscrape.py](/web%20app/dailyscraper/dailyscrape.py)** - Script which handles gathering all player data from current season up to the current date
   - **[/static](/web%20app/static/)** - All the website stuff, CSV files, JS functions, CSS styling
   - **[/templates](/web%20app/templates/)** - All the HTML pages
   - **[app.py](/web%20app/app.py)** - The flask app backend that connects everything
@@ -20,10 +20,10 @@ Right now the main feature is taking user input and returning some prediction. Y
 The website also maintains a list of NBA players that have played during the current season, with their statistics and all-star probability. There is a full leaderboard and an all-star leaderboard, which splits players by conference to project actual lineupss.
 
 ### Goals / Features to Add
-- [ ] Track weekly changes in leaderboard predictions
+- [x] Track weekly changes in leaderboard predictions
 - [ ] Show when request is loading
 - [ ] Team logos (draw them myself or copyright free versions)
-- [ ] Player dropdown shows last game
+- [x] Player dropdown shows last game
 - [ ] Search by biggest risers / fallers (above some threshold, like we probably don't care about someone who is +36 but changed from 0.001 to 0.003)
 - [ ] Make website look nicer (CSS and style updgrades) (colors + fonts)
   - [ ] Colors for main table ? maybe

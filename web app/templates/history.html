@@ -28,6 +28,21 @@
     <p class="descript">All players' rankings throughout the whole season.</p>
     <p class="descript"><i>Disclaimer: Players who did not play for the start of the season do not have entries until Nov 26 (sorry)</i></p>
 
+    <div id="graph-container">
+      <canvas id="history-graph"></canvas>
+    </div>
+
+    <div id="range-select-div">
+      <div>
+        <label for="minRange">Min Rank:</label>
+        <input type="number" id="minRange" name="minRange" value="1" min="1" max="500">
+      </div>
+      <div>
+        <label for="maxRange">Max Rank:</label>
+        <input type="number" id="maxRange" name="maxRange" value="10" min="1" max="500">
+      </div>
+    </div>
+
     <!-- Filter by team -->
     <div id="team-filter-div">
       <div class="atl off" onclick="selectTeam('atl')">ATL</div>
@@ -60,10 +75,6 @@
       <div class="tor off" onclick="selectTeam('tor')">TOR</div>
       <div class="uta off" onclick="selectTeam('uta')">UTA</div>
       <div class="was off" onclick="selectTeam('was')">WAS</div>
-  </div>
-
-    <div id="graph-container">
-      <canvas id="history-graph"></canvas>
     </div>
 
     <script>

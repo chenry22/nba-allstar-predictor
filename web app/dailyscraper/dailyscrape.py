@@ -4,6 +4,8 @@ import numpy as np
 import requests
 import os
 import pickle
+import sys
+import time
 
 from datetime import datetime
 
@@ -278,10 +280,40 @@ def datascrape():
                 # Set team var to last team of season
                 player[3] = new_team
 
+        # add last game stats
+        player_url = str(all_data[0].find('a', href=True)['href']).split(".")[0]
+        game_log_url = "https://www.basketball-reference.com" + player_url + "/gamelog/2025"
+        res = requests.get(game_log_url, headers={'User-Agent': 'Mozilla/5.0'})
+        soup  = BeautifulSoup(res.content, "html.parser")
+        games = soup.find('table', id='pgl_basic').find('tbody').find_all('tr')
+        for game in reversed(games):
+            if game.has_attr("id"):
+                # means this is the last played game, so use this data
+                game_data = game.find_all('td')
+                        # game date, game loc, game result (W/L and pt diff)
+                        # MP, PTS, RB (ORB + DRB),
+                        # AST, STL, BLK, 
+                        # FG/FGA (FG%), 3P/3PA (3P%), FT/FTA (FT%),
+                        # TOV, PF, +/-
+                player += [
+                    game_data[1].string, str(("vs " if game_data[4].string == "" else "at ") + game_data[5].string), game_data[6].string,
+                    game_data[8].string, game_data[26].string, game_data[20].string + " (" + game_data[19].string + "d " + game_data[18].string + "o)",
+                    game_data[21].string, game_data[22].string, game_data[23].string,
+                    game_data[9].string + "/" + game_data[10].string + " (" + str("-" if game_data[11].string is None else round(float(game_data[11].string) * 100.0, 1)) + "%)",
+                    game_data[12].string + "/" + game_data[13].string + " (" + str("-" if game_data[14].string == None else round(float(game_data[14].string) * 100.0, 1)) + "%)",
+                    game_data[15].string + "/" + game_data[16].string + " (" + str("-" if game_data[17].string == None else round(float(game_data[17].string) * 100.0, 1)) + "%)",
+                    game_data[24].string, game_data[25].string, game_data[28].string
+                ]
+                break
+
         data += [player]
+        sys.stdout.write(f'\r\tProgress: {j} / {len(player_rows)}')
+        sys.stdout.flush()
+        time.sleep(1.5)
 
     df = pd.DataFrame(data)
-    cols = ["Year", "Name", "Age", "Team", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS", "Awards"]
+    cols = ["Year", "Name", "Age", "Team", "Position", "Games Played", "Games Started", "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS", "Awards",
+            "Last Game", "Last Location", "Last Result", "Last MP", "Last PTS", "Last TRB", "Last AST", "Last STL", "Last BLK", "Last FG", "Last 3P", "Last FT", "Last TOV", "Last PF", "Last +/-"]
     df.columns = cols
     df = df.drop(columns=["Awards"], axis=1)
 
@@ -328,7 +360,7 @@ def datascrape():
     df["Games Played"] = df.apply(lambda x : gamesStats(x, df2, True), axis=1)
     df["Games Started"] = df.apply(lambda x : gamesStats(x, df2, False), axis=1)
                         
-    print("Finished player data compilation + standings update. Now updating leaderboard")
+    print("\nFinished player data compilation + standings update. Now updating leaderboard")
     updateLeaderboard(df)
 
 datascrape()

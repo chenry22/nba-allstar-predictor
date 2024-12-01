@@ -3,8 +3,9 @@ var chart = null;
 var rankHistory = null;
 var unbiasedRankHistory = null;
 
+// filter by rank index
 var minRange = 0;
-var maxRangeExc = 10;
+var maxRangeExc = 24;
 
 var selectedTeams = [];
 const teamColors = {
@@ -12,28 +13,27 @@ const teamColors = {
     "BRK" : "rgb(0, 0, 0)", "CHO" : "rgb(0, 120, 140)",
     "CHI" : "rgb(206, 17, 65)", "CLE" : "rgb(134, 0, 56)",
     "DET" : "rgb(29,66,138)", "IND" : "rgb(253, 187, 48)",
-    "MIA" : "rgb(152, 0, 46)", "MIL" : "rgb(2, 82, 31)",
+    "MIA" : "rgb(152, 0, 46)", "MIL" : "rgb(2, 120, 31)",
     "NYK" : "rgb(228, 171, 44)", "ORL" : "rgb(150, 172, 207)",
     "PHI" : "rgb(0, 107, 182)", "TOR" : "rgb(103, 16, 187)",
     "WAS" : "rgb(244, 110, 237)", "DAL" : "rgb(0, 43, 92)", 
-    "DEN" : "rgb(255, 198, 39)", "GSW" : "rgb(29, 66, 138)", 
+    "DEN" : "rgb(255, 198, 39)", "GSW" : "rgb(29, 66, 138, 205)", 
     "HOU" : "rgb(206,17,65)", "LAC" : "rgb(119, 209, 238)",
     "LAL" : "rgb(126, 52, 247)", "MEM" : "rgb(93, 118, 169)", 
     "MIN" : "rgb(12, 35, 64)", "NOP" : "rgb(180, 151, 90)", 
     "OKC" : "rgb(0, 125, 195)", "PHO" : "rgb(216, 155, 6)", 
     "POR" : "rgb(224, 58, 62)", "SAC" : "rgb(91,43,130)", 
-    "SAS" : "rgb(159, 159, 158)", "UTA" : "rgb(62, 38, 128)"
+    "SAS" : "rgb(151, 151, 151)", "UTA" : "rgb(62, 38, 128)"
 };
 
 // TODO: allow search by player
-// TODO: allow search by team
 async function updateChart(){
     // first make sure to load rankHistory
     const rankData = await getRankHistory();
     const dates = Object.keys(rankData[0]).slice(2);
 
+    // sort by rankings from most recent data
     rankData.sort((a, b) => (
-        // sort by most recent date
         parseInt(a[dates[dates.length - 1]]) > parseInt(b[dates[dates.length - 1]]) ? 1 : -1
     ));
 
@@ -51,13 +51,11 @@ async function updateChart(){
                 tension: 0.3
             });
         }
-        chart.options.scales.y.min = minRange
-        chart.options.scales.y.max = maxRangeExc + 5
     } else {
         for(var i = 0; i < rankData.length; i++){
             var vals = Object.values(rankData[i]);
             vals = vals.map(x => x < 0 ? null : x);
-            if(selectedTeams.includes(vals[1])) {
+            if(selectedTeams.includes(vals[1]) && (i >= minRange && i < maxRangeExc)) {
                 players.push({
                     label: vals[0],
                     data: vals.slice(2),
@@ -68,12 +66,10 @@ async function updateChart(){
                 });
             } 
         }
-
-        // TODO: filter by top x players?
-        chart.options.scales.y.min = 1
-        chart.options.scales.y.max = null
     }
 
+    chart.options.scales.y.min = players.length < 5 || minRange <= 10 ? null : minRange - 10
+    chart.options.scales.y.max = maxRangeExc + 10
     chart.data.datasets = players
     chart.update()
 }
@@ -87,21 +83,7 @@ function selectTeam(team){
             return t !== team
         })
     }
-
-    console.log(selectedTeams)
     updateChart()
-}
-function changeMin(min){
-    if(min < maxRangeExc){
-        minRange = min
-        updateChart()
-    }
-}
-function changeMax(max){
-    if(max >= minRange){
-        maxRangeExc = max + 1
-        updateChart()
-    }
 }
 
 async function loadLineGraph(){
@@ -238,3 +220,36 @@ function parseCSV(csv) {
 
     return data;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // slider stuff, max and min listner favor new input
+    const rangeInputvalue = document.getElementById("range-select-div").getElementsByTagName("input")
+    rangeInputvalue[0].addEventListener("input", e => {
+        if(!Number.isNaN(parseInt(rangeInputvalue[0].value))){
+            minRange = parseInt(rangeInputvalue[0].value) - 1;
+            if(minRange < 0){
+                rangeInputvalue[0].value = 1;
+                minRange = 0;
+            }
+            if (maxRangeExc <= minRange) {
+                rangeInputvalue[1].value = minRange + 1;
+                maxRangeExc = minRange + 1;
+            }
+            updateChart();
+        }
+    });
+    rangeInputvalue[1].addEventListener("input", e => {
+        if(!Number.isNaN(parseInt(rangeInputvalue[1].value) != null)){
+            maxRangeExc = parseInt(rangeInputvalue[1].value);
+            if(maxRangeExc > rankHistory.length){
+                rangeInputvalue[1].value = rankHistory.length
+                maxRangeExc = rankHistory.length;
+            }
+            if (maxRangeExc <= minRange) {
+                rangeInputvalue[0].value = maxRangeExc;
+                minRange = maxRangeExc;
+            }
+            updateChart();
+        }
+    });
+}, false);
