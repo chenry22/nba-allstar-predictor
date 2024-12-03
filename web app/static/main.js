@@ -229,8 +229,8 @@ function getCurrPlayerData() {
         })
         .then(data => {
             currPlayers = parseCSV(data,
-                ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
-                "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
+                ["", "Name", "Position", "Age", "Team", "Games Played", "Games Started",
+                "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "FT", "FTA",
                 "FT%", "ORB", "DRB", "AST", "STL", "BLK",
                 "TOV", "PF", "PTS", 
                 "Last Game", "Last Location", "Last Result",
@@ -306,8 +306,8 @@ function loadLeaderboardData(){
     .then(data => {
         var leaderboard = parseCSV(data, 
             ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
-            "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
-            "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+            "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "FT", "FTA", "FT%",
+            "ORB", "DRB", "AST", "STL", "BLK",
             "TOV", "PF", "PTS", 
             "Last Game", "Last Location", "Last Result",
             "Last MP", "Last PTS", "Last TRB", "Last AST",
@@ -512,8 +512,8 @@ function loadAllPlayerData(){
         .then(data => {
             leaderboard = parseCSV(data, 
                 ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
-                    "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
-                    "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+                    "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "FT", "FTA", "FT%",
+                    "ORB", "DRB", "AST", "STL", "BLK",
                     "TOV", "PF", "PTS", 
                     "Last Game", "Last Location", "Last Result",
                     "Last MP", "Last PTS", "Last TRB", "Last AST",
@@ -539,8 +539,8 @@ function loadAllPlayerData(){
         .then(data => {
             unbiasedLeaderboard = parseCSV(data, 
                 ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
-                    "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
-                    "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+                    "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "FT", "FTA", "FT%",
+                    "ORB", "DRB", "AST", "STL", "BLK",
                     "TOV", "PF", "PTS", 
                     "Last Game", "Last Location", "Last Result",
                     "Last MP", "Last PTS", "Last TRB", "Last AST",
@@ -752,12 +752,12 @@ function createDataDropdown(player){
     dataNode.appendChild(createDropDownCell("AST", player["AST"]));
     dataNode.appendChild(createDropDownCell("STL", player["STL"]));
     dataNode.appendChild(createDropDownCell("BLK", player["BLK"]));
-    dataNode.appendChild(createDropDownCell("FGA", player["FGA"]));
-    dataNode.appendChild(createDropDownCell("FG%", (parseFloat(player["FG%"]) * 100.0).toFixed(1)));
-    dataNode.appendChild(createDropDownCell("3PA", player["3PA"]));
-    dataNode.appendChild(createDropDownCell("3P%", (parseFloat(player["3P%"]) * 100.0).toFixed(1)));
-    dataNode.appendChild(createDropDownCell("FTA", player["FTA"]));
-    dataNode.appendChild(createDropDownCell("FT%", (parseFloat(player["FT%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("FGs", player["FG"] + "/" + player["FGA"] + " (" + (parseFloat(player["FG%"]) * 100.0).toFixed(1) + "%)"));
+    // dataNode.appendChild(createDropDownCell("FG%", (parseFloat(player["FG%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("3Ps", player["3P"] + "/" + player["3PA"] + " (" + (parseFloat(player["3P%"]) * 100.0).toFixed(1) + "%)"));
+    // dataNode.appendChild(createDropDownCell("3P%", (parseFloat(player["3P%"]) * 100.0).toFixed(1)));
+    dataNode.appendChild(createDropDownCell("FTs", player["FT"] + "/" + player["FTA"] + " (" + (parseFloat(player["FT%"]) * 100.0).toFixed(1) + "%)"));
+    // dataNode.appendChild(createDropDownCell("FT%", (parseFloat(player["FT%"]) * 100.0).toFixed(1)));
     dataNode.appendChild(createDropDownCell("TOV", player["TOV"]));
     dataNode.appendChild(createDropDownCell("PF", player["PF"]));
     dataNode.appendChild(createDropDownCell("Team Win %", player["Win Percent"]));
@@ -765,8 +765,8 @@ function createDataDropdown(player){
     // create nodes for last game
     var lastGameNode = document.createElement('div');
     lastGameNode.classList.add('dropdown-data-div')
-    var date = new Date(player["Last Game"]).toLocaleString("en-us", {day: "numeric", month: "short", year: "numeric"});
-    lastGameNode.appendChild(createDropDownCell(date, player["Last Result"] + " " + player["Last Location"]))
+    var month = new Date(player["Last Game"]).toLocaleString("en-us", {month: "short"});
+    lastGameNode.appendChild(createDropDownCell(month + " " + player["Last Game"].split("-")[2] + ", " + player["Last Game"].split("-")[0], player["Last Result"] + " " + player["Last Location"]))
     lastGameNode.appendChild(createDropDownCell("Mins", player["Last MP"]))
     lastGameNode.appendChild(createDropDownCell("PTS", player["Last PTS"]))
     lastGameNode.appendChild(createDropDownCell("RB", player["Last TRB"]))

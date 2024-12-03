@@ -245,6 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 rangeInputvalue[1].value = rankHistory.length
                 maxRangeExc = rankHistory.length;
             }
+            if (maxRangeExc <= 0){
+                rangeInputvalue[0].value = 1;
+                rangeInputvalue[1].value = 1;
+                minRange = 0;
+                maxRangeExc = 1;
+
+            }
             if (maxRangeExc <= minRange) {
                 rangeInputvalue[0].value = maxRangeExc;
                 minRange = maxRangeExc;
