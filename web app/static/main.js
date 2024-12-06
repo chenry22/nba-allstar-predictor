@@ -406,8 +406,8 @@ function loadLeaderboardData(){
     .then(data => {
         var leaderboard = parseCSV(data, 
             ["Name", "Position", "Age", "Team", "Games Played", "Games Started",
-            "MPG", "FGA", "FG%", "3PA", "3P%", "FTA",
-            "FT%", "ORB", "DRB", "AST", "STL", "BLK",
+            "MPG", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "FT", "FTA", "FT%",
+            "ORB", "DRB", "AST", "STL", "BLK",
             "TOV", "PF", "PTS", 
             "Last Game", "Last Location", "Last Result",
             "Last MP", "Last PTS", "Last TRB", "Last AST",
